@@ -1,1 +1,296 @@
-hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game Design Portfolio</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --lava: #ef4444;
+  --base: #22c55e;
+  --bg: linear-gradient(180deg,#0f172a,#020617);
+  --card: rgba(255,255,255,0.08);
+  --border: rgba(255,255,255,0.15);
+  --text: #e5e7eb;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 1.2rem;
+}
+
+h1 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+section {
+  background: var(--card);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  padding: 1.4rem;
+  margin-bottom: 2rem;
+  animation: fadeUp 0.6s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.lava { background: rgba(239,68,68,.2); color: #fecaca; }
+.base { background: rgba(34,197,94,.2); color: #bbf7d0; }
+
+h2 { margin-top: 0.2rem; }
+
+details {
+  margin-top: 1rem;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.6rem;
+  border-radius: 0.6rem;
+  background: rgba(255,255,255,.05);
+}
+
+summary:hover {
+  background: rgba(255,255,255,.12);
+}
+
+ul {
+  padding-left: 1.2rem;
+  margin-top: 0.6rem;
+}
+
+li { margin-bottom: 0.4rem; }
+
+/* IMAGE ZOOM */
+.zoom {
+  margin-top: 1rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid var(--border);
+}
+
+.zoom img {
+  width: 100%;
+  transition: transform 0.5s ease;
+}
+
+.zoom:hover img,
+.zoom:active img {
+  transform: scale(1.35);
+}
+
+/* TIMETABLE */
+input[type="time"] {
+  background: rgba(0,0,0,.4);
+  border: 1px solid var(--border);
+  color: white;
+  padding: 0.4rem;
+  border-radius: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+th, td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.6rem;
+}
+
+th {
+  text-align: left;
+  opacity: 0.8;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<h1>Modified Games Design Portfolio</h1>
+
+<!-- FLOOR IS LAVA -->
+<section>
+  <span class="badge lava">Foreign Game</span>
+  <h2>The Floor Is Lava</h2>
+
+  <details open>
+    <summary>Game Overview</summary>
+    <ul>
+      <li>Two teams: Catchers and Players</li>
+      <li>Players must avoid touching the floor</li>
+      <li>Catchers are restricted to circles</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Mechanics & Rules</summary>
+    <ul>
+      <li>Catchers must keep both feet inside the circle</li>
+      <li>Two violations = frozen for 5 seconds</li>
+      <li>Players may jump creatively</li>
+      <li>No mobile tools allowed</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Objectives</summary>
+    <ul>
+      <li>Players cross the court safely</li>
+      <li>Catchers tag as many players as possible</li>
+    </ul>
+  </details>
+
+  <p><em>Tap or hover to zoom the court layout</em></p>
+  <div class="zoom">
+    <img src="court-layout.jpg" alt="Court Layout">
+  </div>
+</section>
+
+<!-- AGAWAN BASE -->
+<section>
+  <span class="badge base">Laro ng Lahi</span>
+  <h2>Agawan Base (Modified)</h2>
+
+  <details open>
+    <summary>Winning Conditions</summary>
+    <ul>
+      <li>Touch the enemy base safely</li>
+      <li>Capture more than half of the opposing team</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Modified Bihag System</summary>
+    <ul>
+      <li>One-hand tagging only</li>
+      <li>No gang tagging</li>
+      <li>Rescue requires both players to return safely</li>
+      <li>If rescuer is tagged → both are prisoners</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>New Strategic Rules</summary>
+    <ul>
+      <li>Neutral safe zone (max 5 seconds)</li>
+      <li>No tagging inside safe zone</li>
+      <li>Only 2 defenders allowed at base</li>
+    </ul>
+  </details>
+</section>
+
+<!-- TIMETABLE -->
+<section>
+  <h2>Dynamic Timetable</h2>
+
+  <label><strong>Start Time</strong></label><br>
+  <input type="time" id="startTime" value="09:00">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Duration</th>
+        <th>Activity</th>
+      </tr>
+    </thead>
+    <tbody id="schedule"></tbody>
+  </table>
+</section>
+
+<footer>
+  Designed as a Physical Education game portfolio
+</footer>
+
+</div>
+
+<script>
+const activities = [
+  { name: "Prayer", dur: 2 },
+  { name: "Warm-up", dur: 3 },
+  { name: "Buffer Time", dur: 15 },
+  { name: "Explanation of Game", dur: 2 },
+  { name: "Trial Round", dur: 3 },
+  { name: "Team A vs Team B", dur: 4 },
+  { name: "Team B vs Team A", dur: 4 },
+  { name: "Team C vs Team D", dur: 4 },
+  { name: "Team D vs Team C", dur: 4 },
+  { name: "Final Match", dur: 4 },
+  { name: "Cool Down", dur: 2 }
+];
+
+const scheduleEl = document.getElementById("schedule");
+const startInput = document.getElementById("startTime");
+
+function format(mins) {
+  const h = Math.floor(mins / 60);
+  const m = mins % 60;
+  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+}
+
+function render() {
+  scheduleEl.innerHTML = "";
+  let [h,m] = startInput.value.split(":").map(Number);
+  let current = h*60 + m;
+
+  activities.forEach(a=>{
+    let end = current + a.dur;
+    scheduleEl.innerHTML += `
+      <tr>
+        <td>${format(current)} – ${format(end)}</td>
+        <td>${a.dur}</td>
+        <td>${a.name}</td>
+      </tr>`;
+    current = end;
+  });
+}
+
+startInput.addEventListener("input", render);
+render();
+</script>
+
+</body>
+</html>
