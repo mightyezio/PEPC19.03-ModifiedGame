@@ -3,294 +3,1130 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Design Portfolio</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+<title>Game Day — PE Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
-  --lava: #ef4444;
-  --base: #22c55e;
-  --bg: linear-gradient(180deg,#0f172a,#020617);
-  --card: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.15);
-  --text: #e5e7eb;
+  --lava: #FF4500;
+  --lava-b: #FF6B35;
+  --blue: #0057FF;
+  --blue-l: #5CA8FF;
+  --yellow: #FFD60A;
+  --dark: #080B10;
+  --mid: #0F1319;
+  --card: #111520;
+  --border: rgba(255,255,255,.08);
+  --border2: rgba(255,255,255,.16);
+  --text: #EEF0F4;
+  --muted: #6B7280;
 }
-
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 body {
-  margin: 0;
-  background: var(--bg);
+  background: var(--dark);
   color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
 }
+a { text-decoration: none; color: inherit; }
 
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 1.2rem;
+/* ── CURSOR ── */
+#cur {
+  position: fixed; z-index: 9999;
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--lava-b);
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  transition: width .15s, height .15s;
+  mix-blend-mode: exclusion;
 }
+#cur.big { width: 32px; height: 32px; }
+@media (hover:none) { body { cursor: auto; } #cur { display: none; } }
 
-h1 {
-  font-size: 2rem;
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-section {
-  background: var(--card);
-  backdrop-filter: blur(14px);
-  border: 1px solid var(--border);
-  border-radius: 1.5rem;
-  padding: 1.4rem;
-  margin-bottom: 2rem;
-  animation: fadeUp 0.6s ease both;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(25px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.badge {
-  display: inline-block;
-  padding: 0.3rem 0.8rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  margin-bottom: 0.5rem;
-}
-
-.lava { background: rgba(239,68,68,.2); color: #fecaca; }
-.base { background: rgba(34,197,94,.2); color: #bbf7d0; }
-
-h2 { margin-top: 0.2rem; }
-
-details {
-  margin-top: 1rem;
-}
-
-summary {
-  cursor: pointer;
-  font-weight: 600;
-  padding: 0.6rem;
-  border-radius: 0.6rem;
-  background: rgba(255,255,255,.05);
-}
-
-summary:hover {
-  background: rgba(255,255,255,.12);
-}
-
-ul {
-  padding-left: 1.2rem;
-  margin-top: 0.6rem;
-}
-
-li { margin-bottom: 0.4rem; }
-
-/* IMAGE ZOOM */
-.zoom {
-  margin-top: 1rem;
-  overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid var(--border);
-}
-
-.zoom img {
-  width: 100%;
-  transition: transform 0.5s ease;
-}
-
-.zoom:hover img,
-.zoom:active img {
-  transform: scale(1.35);
-}
-
-/* TIMETABLE */
-input[type="time"] {
-  background: rgba(0,0,0,.4);
-  border: 1px solid var(--border);
-  color: white;
-  padding: 0.4rem;
-  border-radius: 0.4rem;
-  margin-top: 0.4rem;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-}
-
-th, td {
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: .85rem 2rem;
+  background: rgba(8,11,16,.85);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-  padding: 0.6rem;
+}
+.logo { font-family: 'Bebas Neue'; font-size: 1.4rem; letter-spacing: .1em; }
+.logo em { color: var(--lava); font-style: normal; }
+.nav-links { display: flex; gap: 1.8rem; }
+.nav-links a {
+  font-family: 'Space Mono'; font-size: .6rem;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--muted); transition: color .2s;
+}
+.nav-links a:hover { color: var(--text); }
+@media (max-width: 600px) { .nav-links { display: none; } }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 7rem 2rem 4rem;
+  position: relative; overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 60% at 15% 55%, rgba(255,69,0,.16), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(0,87,255,.13), transparent 70%),
+    var(--dark);
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 54px 54px;
+}
+.eyebrow {
+  font-family: 'Space Mono'; font-size: .62rem;
+  text-transform: uppercase; letter-spacing: .22em;
+  color: var(--lava); margin-bottom: 1rem; position: relative;
+}
+.hero h1 {
+  font-family: 'Bebas Neue';
+  font-size: clamp(4.5rem, 16vw, 11rem);
+  line-height: .88; position: relative; margin-bottom: 1.5rem;
+}
+.hero h1 .ghost {
+  display: block;
+  -webkit-text-stroke: 1px rgba(255,255,255,.18);
+  color: transparent;
+}
+.hero-desc {
+  max-width: 460px; font-size: .95rem; line-height: 1.75;
+  color: var(--muted); position: relative; margin-bottom: 2.5rem;
+}
+.hero-btns { display: flex; flex-wrap: wrap; gap: .7rem; position: relative; }
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .7rem 1.6rem;
+  font-family: 'Space Mono'; font-size: .68rem;
+  text-transform: uppercase; letter-spacing: .1em;
+  border-radius: 6px;
+  transition: transform .2s, box-shadow .2s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn-lava { background: var(--lava); color: #fff; }
+.btn-lava:hover { box-shadow: 0 10px 28px rgba(255,69,0,.35); }
+.btn-blue { background: var(--blue); color: #fff; }
+.btn-blue:hover { box-shadow: 0 10px 28px rgba(0,87,255,.35); }
+.btn-ghost { border: 1px solid var(--border2); color: var(--text); }
+
+/* ── LAYOUT ── */
+.section { padding: 5rem 2rem; }
+.max-w { max-width: 1060px; margin: 0 auto; }
+.sec-eye {
+  font-family: 'Space Mono'; font-size: .6rem;
+  text-transform: uppercase; letter-spacing: .22em;
+  color: var(--muted); margin-bottom: .6rem;
+}
+.sec-h {
+  font-family: 'Bebas Neue';
+  font-size: clamp(2.8rem, 9vw, 5.5rem);
+  line-height: .95; margin-bottom: 2.5rem;
+}
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  margin: 0 2rem;
 }
 
-th {
-  text-align: left;
-  opacity: 0.8;
+/* ── GAME CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+.card-top { padding: 2rem 2rem 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+.badge {
+  display: inline-flex; align-items: center;
+  padding: .25rem .8rem; border-radius: 999px;
+  font-family: 'Space Mono'; font-size: .58rem;
+  text-transform: uppercase; letter-spacing: .12em;
+  width: fit-content;
+}
+.badge-lava { background: rgba(255,69,0,.14); color: var(--lava-b); border: 1px solid rgba(255,69,0,.3); }
+.badge-blue { background: rgba(0,87,255,.14); color: var(--blue-l); border: 1px solid rgba(0,87,255,.3); }
+.card h3 { font-family: 'Bebas Neue'; font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1; }
+.card .desc { font-size: .9rem; line-height: 1.75; color: var(--muted); max-width: 620px; }
+
+/* ── OBJ STRIP ── */
+.obj { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.obj-cell { padding: 1.2rem 1.75rem; }
+.obj-cell + .obj-cell { border-left: 1px solid var(--border); }
+.obj-lbl { font-family: 'Space Mono'; font-size: .56rem; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); margin-bottom: .4rem; }
+.obj-txt { font-size: .88rem; line-height: 1.65; }
+@media (max-width: 520px) {
+  .obj { grid-template-columns: 1fr; }
+  .obj-cell + .obj-cell { border-left: none; border-top: 1px solid var(--border); }
 }
 
-/* FOOTER */
+/* ── COURT ZOOM ── */
+.court {
+  background: #090C12;
+  border-top: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  touch-action: none;
+}
+.court svg {
+  display: block; width: 100%;
+  transition: transform .45s cubic-bezier(.25,.46,.45,.94);
+  transform-origin: 50% 50%;
+}
+.court.zoomed svg { transform: scale(2.3); }
+.court-hint {
+  position: absolute; bottom: .8rem; right: 1rem;
+  font-family: 'Space Mono'; font-size: .56rem;
+  color: rgba(255,255,255,.25);
+  text-transform: uppercase; letter-spacing: .1em;
+  pointer-events: none;
+}
+
+/* ── ACCORDIONS ── */
+.acc-wrap { border-top: 1px solid var(--border); }
+
+details.acc > summary {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.75rem;
+  cursor: pointer;
+  font-family: 'Space Mono';
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text);
+  background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--border);
+  transition: background .2s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+details.acc > summary::-webkit-details-marker { display: none; }
+details.acc > summary::marker { display: none; }
+details.acc > summary:hover { background: rgba(255,255,255,.05); }
+
+.acc-arrow {
+  display: flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 1px solid var(--border2);
+  font-size: 1rem; line-height: 1;
+  transition: transform .25s, background .2s;
+  flex-shrink: 0;
+}
+details.acc[open] > summary .acc-arrow {
+  transform: rotate(45deg);
+  background: rgba(255,255,255,.1);
+}
+
+.acc-body {
+  list-style: none;
+  padding: 1rem 1.75rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,.2);
+}
+.acc-body li {
+  font-size: .88rem;
+  line-height: 1.75;
+  color: var(--muted);
+  padding: .35rem 0 .35rem 1.2rem;
+  position: relative;
+}
+.acc-body li strong { color: var(--text); }
+
+.acc-lava .acc-body li::before { content: '›'; position: absolute; left: 0; color: var(--lava-b); font-size: 1rem; }
+.acc-base .acc-body li::before { content: '›'; position: absolute; left: 0; color: var(--blue-l); font-size: 1rem; }
+
+/* ── TIMETABLE ── */
+.tt-section { background: var(--mid); }
+.time-bar {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 1rem;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.2rem 1.75rem; margin-bottom: 2.5rem;
+}
+.time-bar label {
+  font-family: 'Space Mono'; font-size: .62rem;
+  text-transform: uppercase; letter-spacing: .14em; color: var(--muted);
+}
+.time-bar input[type=time] {
+  background: var(--dark); border: 1px solid var(--border2);
+  color: var(--yellow); border-radius: 7px;
+  padding: .5rem .9rem;
+  font-family: 'Space Mono'; font-size: 1rem;
+  width: 130px;
+}
+.time-bar input:focus { outline: none; border-color: var(--yellow); }
+.time-bar span { font-family: 'Space Mono'; font-size: .58rem; color: var(--muted); }
+
+.tt-group { margin-bottom: 2rem; }
+.tt-label {
+  display: flex; align-items: center; gap: .6rem;
+  margin-bottom: .6rem;
+  font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: .06em;
+}
+.tt-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.tt-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; overflow-x: auto;
+}
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+thead th {
+  padding: .65rem 1.1rem;
+  font-family: 'Space Mono'; font-size: .56rem;
+  text-transform: uppercase; letter-spacing: .15em;
+  color: var(--muted); text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+tbody td { padding: .8rem 1.1rem; border-bottom: 1px solid rgba(255,255,255,.03); vertical-align: middle; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(255,255,255,.02); }
+.td-t { font-family: 'Space Mono'; font-size: .7rem; color: var(--yellow); white-space: nowrap; }
+.td-d { font-family: 'Space Mono'; font-size: .7rem; color: var(--muted); text-align: center; }
+.td-a { font-size: .87rem; }
+.td-buf { color: var(--yellow); font-style: italic; }
+
+/* ── FOOTER ── */
 footer {
-  text-align: center;
-  opacity: 0.6;
-  font-size: 0.8rem;
-  margin-bottom: 1rem;
+  padding: 2rem; text-align: center;
+  border-top: 1px solid var(--border);
+  font-family: 'Space Mono'; font-size: .58rem;
+  color: var(--muted); letter-spacing: .1em; text-transform: uppercase;
+}
+
+/* ── SCROLL REVEAL — starts visible, animates if JS works ── */
+.fu { opacity: 1; transform: none; }
+.fu.animate { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
+.fu.animate.vis { opacity: 1; transform: none; }
+
+@media (max-width: 640px) {
+  .section { padding: 3.5rem 1.25rem; }
+  .card-top { padding: 1.5rem 1.25rem 1rem; }
+  .obj-cell { padding: 1rem 1.25rem; }
+  details.acc > summary { padding: .9rem 1.25rem; }
+  .acc-body { padding: .75rem 1.25rem 1rem; }
 }
 </style>
 </head>
-
 <body>
-<div class="container">
 
-<h1>Modified Games Design Portfolio</h1>
+<div id="cur"></div>
 
-<!-- FLOOR IS LAVA -->
-<section>
-  <span class="badge lava">Foreign Game</span>
-  <h2>The Floor Is Lava</h2>
+<!-- NAV -->
+<nav>
+  <div class="logo">Game<em>Day</em></div>
+  <div class="nav-links">
+    <a href="#lava">Floor is Lava</a>
+    <a href="#agawan">Agawan Base</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#teams">My Team</a>
+  </div>
+</nav>
 
-  <details open>
-    <summary>Game Overview</summary>
-    <ul>
-      <li>Two teams: Catchers and Players</li>
-      <li>Players must avoid touching the floor</li>
-      <li>Catchers are restricted to circles</li>
-    </ul>
-  </details>
-
-  <details>
-    <summary>Mechanics & Rules</summary>
-    <ul>
-      <li>Catchers must keep both feet inside the circle</li>
-      <li>Two violations = frozen for 5 seconds</li>
-      <li>Players may jump creatively</li>
-      <li>No mobile tools allowed</li>
-    </ul>
-  </details>
-
-  <details>
-    <summary>Objectives</summary>
-    <ul>
-      <li>Players cross the court safely</li>
-      <li>Catchers tag as many players as possible</li>
-    </ul>
-  </details>
-
-  <p><em>Tap or hover to zoom the court layout</em></p>
-  <div class="zoom">
-    <img src="court-layout.jpg" alt="Court Layout">
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <p class="eyebrow">PE Class · Modified Game Portfolio</p>
+  <h1>Game<br><span class="ghost">Day.</span></h1>
+  <p class="hero-desc">Two classic games reimagined with strategy, speed, and teamwork. Explore the rules, court layouts, and full game-day schedule.</p>
+  <div class="hero-btns">
+    <a href="#lava" class="btn btn-lava">🔥 Floor is Lava</a>
+    <a href="#agawan" class="btn btn-blue">🏁 Agawan Base</a>
+    <a href="#schedule" class="btn btn-ghost">📅 Schedule</a>
   </div>
 </section>
 
-<!-- AGAWAN BASE -->
-<section>
-  <span class="badge base">Laro ng Lahi</span>
-  <h2>Agawan Base (Modified)</h2>
+<div class="divider"></div>
 
-  <details open>
-    <summary>Winning Conditions</summary>
-    <ul>
-      <li>Touch the enemy base safely</li>
-      <li>Capture more than half of the opposing team</li>
-    </ul>
-  </details>
+<!-- ══════════════════════ FLOOR IS LAVA ══════════════════════ -->
+<section class="section" id="lava">
+<div class="max-w">
+  <p class="sec-eye">Foreign Game · Modified</p>
+  <h2 class="sec-h" style="color:var(--lava-b)">The Floor<br>Is Lava</h2>
 
-  <details>
-    <summary>Modified Bihag System</summary>
-    <ul>
-      <li>One-hand tagging only</li>
-      <li>No gang tagging</li>
-      <li>Rescue requires both players to return safely</li>
-      <li>If rescuer is tagged → both are prisoners</li>
-    </ul>
-  </details>
+  <div class="card acc-lava fu">
+    <div class="card-top">
+      <span class="badge badge-lava">🔥 2 Teams</span>
+      <h3 style="color:var(--lava-b)">Floor is Lava</h3>
+      <p class="desc">Players navigate a lava-covered court using only mats as safe zones, while Catchers — locked inside their circles — try to tag them. Cross the court. Don't touch the floor.</p>
+    </div>
 
-  <details>
-    <summary>New Strategic Rules</summary>
-    <ul>
-      <li>Neutral safe zone (max 5 seconds)</li>
-      <li>No tagging inside safe zone</li>
-      <li>Only 2 defenders allowed at base</li>
-    </ul>
-  </details>
+    <!-- objectives -->
+    <div class="obj">
+      <div class="obj-cell">
+        <p class="obj-lbl">🟠 Catchers — Goal</p>
+        <p class="obj-txt">Capture as many Players as possible without leaving your assigned circle.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="obj-lbl">🏃 Players — Goal</p>
+        <p class="obj-txt">Reach the other side of the court using only the mats, without being caught.</p>
+      </div>
+    </div>
+
+    <!-- court illustration -->
+    <div class="court" id="lavaZoom">
+      <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="lavaBg" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stop-color="#FF4500" stop-opacity=".18"/>
+            <stop offset="100%" stop-color="#0d0500" stop-opacity="0"/>
+          </radialGradient>
+          <pattern id="lavaPat" x="0" y="0" width="44" height="44" patternUnits="userSpaceOnUse">
+            <rect width="44" height="44" fill="#170500"/>
+            <ellipse cx="22" cy="22" rx="16" ry="9" fill="#260800" opacity=".55"/>
+            <ellipse cx="5" cy="5" rx="5" ry="3" fill="#FF4500" opacity=".06"/>
+          </pattern>
+          <filter id="glow1">
+            <feGaussianBlur stdDeviation="4" result="b"/>
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <rect width="800" height="420" fill="url(#lavaPat)"/>
+        <rect width="800" height="420" fill="url(#lavaBg)"/>
+        <rect x="30" y="18" width="740" height="384" rx="5" fill="none" stroke="#FF4500" stroke-width="1.8" stroke-dasharray="8,5" opacity=".45"/>
+        <line x1="400" y1="18" x2="400" y2="402" stroke="#FF6B35" stroke-width="1.2" stroke-dasharray="6,6" opacity=".35"/>
+        <text x="400" y="218" fill="#FF6B35" font-size="9" font-family="monospace" text-anchor="middle" opacity=".45">CENTER</text>
+        <rect x="30" y="18" width="52" height="384" rx="5" fill="rgba(92,168,255,.08)" stroke="#5CA8FF" stroke-width="1.3" stroke-dasharray="5,4"/>
+        <text x="56" y="212" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" transform="rotate(-90,56,212)">START ZONE</text>
+        <rect x="718" y="18" width="52" height="384" rx="5" fill="rgba(92,168,255,.08)" stroke="#5CA8FF" stroke-width="1.3" stroke-dasharray="5,4"/>
+        <text x="744" y="212" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" transform="rotate(90,744,212)">END ZONE</text>
+        <g fill="#1e4d1e" stroke="#4CAF50" stroke-width="1.4">
+          <rect x="90" y="55" width="88" height="52" rx="8"/><text x="134" y="86" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="240" y="125" width="88" height="52" rx="8"/><text x="284" y="156" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="105" y="228" width="88" height="52" rx="8"/><text x="149" y="259" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="248" y="312" width="88" height="52" rx="8"/><text x="292" y="343" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="344" y="74" width="110" height="58" rx="8"/><text x="399" y="108" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="344" y="290" width="110" height="58" rx="8"/><text x="399" y="324" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="488" y="55" width="88" height="52" rx="8"/><text x="532" y="86" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="622" y="134" width="88" height="52" rx="8"/><text x="666" y="165" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="498" y="228" width="88" height="52" rx="8"/><text x="542" y="259" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+          <rect x="630" y="308" width="88" height="52" rx="8"/><text x="674" y="339" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
+        </g>
+        <g fill="rgba(255,69,0,.1)" stroke="#FF4500" stroke-width="2" filter="url(#glow1)">
+          <circle cx="165" cy="200" r="42"/>
+          <text x="165" y="196" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">CATCHER</text>
+          <text x="165" y="207" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">ZONE</text>
+          <circle cx="165" cy="200" r="5" fill="#FF4500" opacity=".9"/>
+          <circle cx="635" cy="200" r="42"/>
+          <text x="635" y="196" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">CATCHER</text>
+          <text x="635" y="207" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">ZONE</text>
+          <circle cx="635" cy="200" r="5" fill="#FF4500" opacity=".9"/>
+          <circle cx="400" cy="200" r="36" stroke-dasharray="5,4"/>
+          <text x="400" y="196" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">CATCHER</text>
+          <text x="400" y="207" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">ZONE</text>
+          <circle cx="400" cy="200" r="5" fill="#FF4500" opacity=".9"/>
+        </g>
+        <ellipse cx="200" cy="390" rx="70" ry="16" fill="#FF4500" opacity=".12"/>
+        <ellipse cx="560" cy="38" rx="60" ry="14" fill="#FF4500" opacity=".10"/>
+        <rect x="556" y="370" width="11" height="8" rx="2" fill="#1e4d1e" stroke="#4CAF50" stroke-width="1"/>
+        <text x="574" y="378" fill="#6B7280" font-size="8" font-family="monospace">Safe Mat</text>
+        <circle cx="561" cy="392" r="6" fill="none" stroke="#FF4500" stroke-width="1.5"/>
+        <text x="574" y="396" fill="#6B7280" font-size="8" font-family="monospace">Catcher Circle</text>
+      </svg>
+      <div class="court-hint">Hover / tap to zoom</div>
+    </div>
+
+    <!-- RULE DROPDOWNS -->
+    <div class="acc-wrap">
+      <details class="acc" open>
+        <summary>Setup <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Mats are scattered around the court to act as safe zones. Players may only step on mats.</li>
+          <li>Circles are spread around the court. Catchers are not allowed to leave their circles.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Catcher Rules <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Catchers must keep <strong>both feet inside the circle</strong> at all times.</li>
+          <li>They may stretch and reach to tag Players — as long as they don't step out.</li>
+          <li>Leaving the circle = 1 warning. <strong>Two warnings = frozen for 5 seconds</strong>, no tagging allowed.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Player Rules <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Must move only on safe mats. <strong>Touching the bare court floor = elimination.</strong></li>
+          <li>Players may jump creatively between platforms.</li>
+          <li>No improvised mobility aids allowed (e.g. handkerchief shoe nets). Speed and skill only.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Scoring &amp; Rounds <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>After one round, roles reverse — the same teams swap Catcher and Player positions.</li>
+          <li>Whichever team catches <strong>more Players across both rounds</strong> wins the game.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</div>
 </section>
 
-<!-- TIMETABLE -->
-<section>
-  <h2>Dynamic Timetable</h2>
+<div class="divider"></div>
 
-  <label><strong>Start Time</strong></label><br>
-  <input type="time" id="startTime" value="09:00">
+<!-- ══════════════════════ AGAWAN BASE ══════════════════════ -->
+<section class="section" id="agawan">
+<div class="max-w">
+  <p class="sec-eye">Laro ng Lahi · Modified</p>
+  <h2 class="sec-h" style="color:var(--blue-l)">Agawan<br>Base</h2>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Duration</th>
-        <th>Activity</th>
-      </tr>
-    </thead>
-    <tbody id="schedule"></tbody>
-  </table>
+  <div class="card acc-base fu">
+    <div class="card-top">
+      <span class="badge badge-blue">🏁 4 Teams · 2 per Round</span>
+      <h3 style="color:var(--blue-l)">Agawan Base</h3>
+      <p class="desc">A Filipino classic reimagined with modified prisoner mechanics, neutral safe zones, and base-guard limits. Pure speed and strategy — no violence allowed.</p>
+    </div>
+
+    <div class="obj">
+      <div class="obj-cell">
+        <p class="obj-lbl">🏁 Win by Base</p>
+        <p class="obj-txt">Touch or step on the enemy team's base without being tagged.</p>
+      </div>
+      <div class="obj-cell">
+        <p class="obj-lbl">🔒 Win by Capture</p>
+        <p class="obj-txt">Tag and imprison over half of the opposing team's players.</p>
+      </div>
+    </div>
+
+    <!-- court illustration -->
+    <div class="court" id="agawanZoom">
+      <svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bgB" cx="25%" cy="50%" r="45%">
+            <stop offset="0%" stop-color="#0057FF" stop-opacity=".14"/>
+            <stop offset="100%" stop-color="#080B10" stop-opacity="0"/>
+          </radialGradient>
+          <radialGradient id="bgR" cx="75%" cy="50%" r="45%">
+            <stop offset="0%" stop-color="#FF4500" stop-opacity=".11"/>
+            <stop offset="100%" stop-color="#080B10" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="800" height="420" fill="#090C14"/>
+        <rect width="800" height="420" fill="url(#bgB)"/>
+        <rect width="800" height="420" fill="url(#bgR)"/>
+        <g opacity=".05" stroke="#fff" stroke-width=".6">
+          <line x1="0" y1="70" x2="800" y2="70"/><line x1="0" y1="140" x2="800" y2="140"/>
+          <line x1="0" y1="210" x2="800" y2="210"/><line x1="0" y1="280" x2="800" y2="280"/>
+          <line x1="0" y1="350" x2="800" y2="350"/>
+          <line x1="100" y1="0" x2="100" y2="420"/><line x1="200" y1="0" x2="200" y2="420"/>
+          <line x1="300" y1="0" x2="300" y2="420"/><line x1="500" y1="0" x2="500" y2="420"/>
+          <line x1="600" y1="0" x2="600" y2="420"/><line x1="700" y1="0" x2="700" y2="420"/>
+        </g>
+        <rect x="28" y="18" width="744" height="384" rx="5" fill="none" stroke="#222" stroke-width="2"/>
+        <rect x="28" y="18" width="372" height="384" fill="rgba(0,87,255,.04)" rx="5"/>
+        <text x="214" y="216" fill="#0057FF" font-size="28" font-family="monospace" text-anchor="middle" opacity=".07" font-weight="bold">TEAM A</text>
+        <rect x="400" y="18" width="372" height="384" fill="rgba(255,69,0,.04)" rx="5"/>
+        <text x="586" y="216" fill="#FF4500" font-size="28" font-family="monospace" text-anchor="middle" opacity=".07" font-weight="bold">TEAM B</text>
+        <line x1="400" y1="18" x2="400" y2="402" stroke="#FFD60A" stroke-width="2.2" stroke-dasharray="10,6"/>
+        <text x="400" y="218" fill="#FFD60A" font-size="8" font-family="monospace" text-anchor="middle" opacity=".6">CENTERLINE</text>
+        <circle cx="90" cy="210" r="42" fill="rgba(0,87,255,.15)" stroke="#5CA8FF" stroke-width="2.5"/>
+        <text x="90" y="206" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">BASE A</text>
+        <circle cx="90" cy="210" r="9" fill="#5CA8FF" opacity=".55"/>
+        <rect x="46" y="310" width="82" height="68" rx="6" fill="rgba(0,87,255,.07)" stroke="#5CA8FF" stroke-width="1.4" stroke-dasharray="5,3"/>
+        <text x="87" y="340" fill="#5CA8FF" font-size="7" font-family="monospace" text-anchor="middle">JAIL A</text>
+        <text x="87" y="352" fill="#5CA8FF" font-size="7" font-family="monospace" text-anchor="middle">(prisoners)</text>
+        <circle cx="710" cy="210" r="42" fill="rgba(255,69,0,.15)" stroke="#FF6B35" stroke-width="2.5"/>
+        <text x="710" y="206" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">BASE B</text>
+        <circle cx="710" cy="210" r="9" fill="#FF6B35" opacity=".55"/>
+        <rect x="672" y="310" width="82" height="68" rx="6" fill="rgba(255,69,0,.07)" stroke="#FF6B35" stroke-width="1.4" stroke-dasharray="5,3"/>
+        <text x="713" y="340" fill="#FF6B35" font-size="7" font-family="monospace" text-anchor="middle">JAIL B</text>
+        <text x="713" y="352" fill="#FF6B35" font-size="7" font-family="monospace" text-anchor="middle">(prisoners)</text>
+        <circle cx="400" cy="80" r="30" fill="rgba(255,214,10,.1)" stroke="#FFD60A" stroke-width="1.8" stroke-dasharray="5,4"/>
+        <text x="400" y="76" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">SAFE SPOT</text>
+        <text x="400" y="87" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">max 5s</text>
+        <circle cx="400" cy="345" r="30" fill="rgba(255,214,10,.1)" stroke="#FFD60A" stroke-width="1.8" stroke-dasharray="5,4"/>
+        <text x="400" y="341" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">SAFE SPOT</text>
+        <text x="400" y="352" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">max 5s</text>
+        <circle cx="205" cy="155" r="9" fill="#5CA8FF" opacity=".75"/>
+        <circle cx="178" cy="275" r="9" fill="#5CA8FF" opacity=".75"/>
+        <circle cx="308" cy="210" r="9" fill="#5CA8FF" opacity=".5"/>
+        <circle cx="592" cy="165" r="9" fill="#FF6B35" opacity=".75"/>
+        <circle cx="622" cy="280" r="9" fill="#FF6B35" opacity=".75"/>
+        <circle cx="490" cy="235" r="9" fill="#FF6B35" opacity=".5"/>
+        <circle cx="558" cy="377" r="7" fill="#5CA8FF" opacity=".7"/>
+        <text x="572" y="381" fill="#6B7280" font-size="8" font-family="monospace">Player</text>
+        <circle cx="558" cy="394" r="7" fill="none" stroke="#FFD60A" stroke-width="1.5"/>
+        <text x="572" y="398" fill="#6B7280" font-size="8" font-family="monospace">Safe Zone (5s max)</text>
+        <rect x="552" y="405" width="12" height="8" rx="2" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="572" y="413" fill="#6B7280" font-size="8" font-family="monospace">Jail</text>
+      </svg>
+      <div class="court-hint">Hover / tap to zoom</div>
+    </div>
+
+    <!-- RULE DROPDOWNS -->
+    <div class="acc-wrap">
+      <details class="acc" open>
+        <summary>Setup <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>4 teams total; <strong>2 teams compete per round.</strong></li>
+          <li>Each team has one base (cone / hoop / marked area) and a jail beside it.</li>
+          <li>A clear centerline divides the two territories.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Tagging Rules <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Tagging = <strong>one-hand tap only.</strong></li>
+          <li>Two or more players may <strong>not</strong> simultaneously tag the same opponent.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Prisoner System (Modified) <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Tagged inside enemy territory → you become a prisoner and go to jail.</li>
+          <li>One teammate can tap you free — but <strong>both must return</strong> to your own territory without being tagged.</li>
+          <li>If the rescuer is tagged mid-rescue → <strong>both become prisoners.</strong></li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Safe Zones — New Rule <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Each team has one neutral safe spot at center court.</li>
+          <li>Maximum stay: <strong>5 seconds.</strong></li>
+          <li>No tagging allowed inside the safe zone.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Base Guard Limit <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>Maximum <strong>2 players</strong> may guard their own base at once.</li>
+          <li>Exceeding this = warning. Second violation = <strong>free run for opponents.</strong></li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>Safety &amp; Fair Play <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li>No pushing, hair-pulling, or any violent contact.</li>
+          <li>Speed and strategy only — wits and agility win the game.</li>
+          <li>Players are safe when on or holding their own base.</li>
+        </ul>
+      </details>
+    </div>
+  </div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════ TIMETABLE ══════════════════════ -->
+<section class="section tt-section" id="schedule">
+<div class="max-w">
+  <p class="sec-eye">Game Day · Schedule</p>
+  <h2 class="sec-h">Timetable</h2>
+
+  <!-- Controls bar -->
+  <div class="time-bar">
+    <div class="time-bar-left">
+      <label for="startTime">Start time</label>
+      <input type="time" id="startTime" value="09:00">
+    </div>
+    <div class="tt-toggles">
+      <div class="toggle-row">
+        <span class="toggle-lbl">Preliminaries</span>
+        <label class="tog">
+          <input type="checkbox" id="togPrelim" checked>
+          <span class="tog-track"><span class="tog-thumb"></span></span>
+        </label>
+        <input type="number" id="durPrelim" class="dur-input" value="5" min="1" max="60" title="Total prelim minutes">
+        <span class="dur-unit">min</span>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-lbl">Buffer Time</span>
+        <label class="tog">
+          <input type="checkbox" id="togBuffer" checked>
+          <span class="tog-track"><span class="tog-thumb"></span></span>
+        </label>
+        <input type="number" id="durBuffer" class="dur-input" value="15" min="1" max="60" title="Buffer minutes">
+        <span class="dur-unit">min</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="ttContainer"></div>
+</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════════════════ TEAM FINDER ══════════════════════ -->
+<section class="section" id="teams">
+<div class="max-w">
+  <p class="sec-eye">Game Day · Rosters</p>
+  <h2 class="sec-h">Find My<br>Team</h2>
+
+  <div class="finder-wrap fu">
+    <div class="finder-search">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="nameSearch" placeholder="Type your last name..." autocomplete="off" spellcheck="false">
+        <button id="clearSearch" class="clear-btn" aria-label="Clear">✕</button>
+      </div>
+      <p class="search-hint">Search to find your team for both games</p>
+    </div>
+
+    <div id="finderResults" class="finder-results hidden"></div>
+
+    <div class="teams-grid" id="teamsGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
 </section>
 
 <footer>
-  Designed as a Physical Education game portfolio
+  © 2025 · PE Class — Game Day Portfolio · Floor is Lava &amp; Agawan Base
 </footer>
 
-</div>
+<style>
+/* ── TIMETABLE TOGGLES ── */
+.time-bar {
+  display: flex; flex-wrap: wrap; gap: 1.25rem;
+  align-items: flex-start;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 1.25rem 1.75rem; margin-bottom: 2.5rem;
+}
+.time-bar-left { display: flex; flex-direction: column; gap: .4rem; }
+.time-bar-left label {
+  font-family: 'Space Mono'; font-size: .62rem;
+  text-transform: uppercase; letter-spacing: .14em; color: var(--muted);
+}
+.time-bar input[type=time] {
+  background: var(--dark); border: 1px solid var(--border2);
+  color: var(--yellow); border-radius: 7px;
+  padding: .5rem .9rem; font-family: 'Space Mono'; font-size: 1rem; width: 130px;
+}
+.time-bar input[type=time]:focus { outline: none; border-color: var(--yellow); }
 
-<script>
-const activities = [
-  { name: "Prayer", dur: 2 },
-  { name: "Warm-up", dur: 3 },
-  { name: "Buffer Time", dur: 15 },
-  { name: "Explanation of Game", dur: 2 },
-  { name: "Trial Round", dur: 3 },
-  { name: "Team A vs Team B", dur: 4 },
-  { name: "Team B vs Team A", dur: 4 },
-  { name: "Team C vs Team D", dur: 4 },
-  { name: "Team D vs Team C", dur: 4 },
-  { name: "Final Match", dur: 4 },
-  { name: "Cool Down", dur: 2 }
-];
-
-const scheduleEl = document.getElementById("schedule");
-const startInput = document.getElementById("startTime");
-
-function format(mins) {
-  const h = Math.floor(mins / 60);
-  const m = mins % 60;
-  return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0");
+.tt-toggles { display: flex; flex-direction: column; gap: .7rem; justify-content: center; }
+.toggle-row {
+  display: flex; align-items: center; gap: .7rem;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: .55rem 1rem;
+}
+.toggle-lbl {
+  font-family: 'Space Mono'; font-size: .64rem;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+  min-width: 110px;
 }
 
-function render() {
-  scheduleEl.innerHTML = "";
-  let [h,m] = startInput.value.split(":").map(Number);
-  let current = h*60 + m;
+/* toggle switch */
+.tog { position: relative; display: inline-flex; cursor: pointer; }
+.tog input { position: absolute; opacity: 0; width: 0; height: 0; }
+.tog-track {
+  width: 40px; height: 22px; border-radius: 999px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid var(--border2);
+  transition: background .25s;
+  position: relative;
+}
+.tog input:checked ~ .tog-track { background: var(--yellow); border-color: var(--yellow); }
+.tog-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--muted); transition: transform .25s, background .25s;
+}
+.tog input:checked ~ .tog-track .tog-thumb { transform: translateX(18px); background: var(--dark); }
 
-  activities.forEach(a=>{
-    let end = current + a.dur;
-    scheduleEl.innerHTML += `
-      <tr>
-        <td>${format(current)} – ${format(end)}</td>
-        <td>${a.dur}</td>
-        <td>${a.name}</td>
+.dur-input {
+  width: 52px; background: var(--dark);
+  border: 1px solid var(--border2); color: var(--text);
+  border-radius: 6px; padding: .3rem .5rem;
+  font-family: 'Space Mono'; font-size: .8rem; text-align: center;
+}
+.dur-input:focus { outline: none; border-color: var(--yellow); }
+.dur-unit { font-family: 'Space Mono'; font-size: .6rem; color: var(--muted); }
+
+/* disabled state */
+.toggle-row.disabled .toggle-lbl,
+.toggle-row.disabled .dur-unit { opacity: .35; }
+.toggle-row.disabled .dur-input { opacity: .35; pointer-events: none; }
+
+/* ── TEAM FINDER ── */
+.finder-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.finder-search { padding: 2rem; border-bottom: 1px solid var(--border); }
+.search-box {
+  display: flex; align-items: center; gap: .75rem;
+  background: var(--dark); border: 1px solid var(--border2);
+  border-radius: 10px; padding: .75rem 1rem;
+  transition: border-color .2s;
+}
+.search-box:focus-within { border-color: var(--yellow); }
+.search-icon { font-size: 1rem; flex-shrink: 0; }
+.search-box input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: 'DM Sans'; font-size: 1.05rem;
+  font-weight: 500;
+}
+.search-box input::placeholder { color: var(--muted); font-weight: 400; }
+.clear-btn {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: .9rem; padding: .2rem .4rem;
+  border-radius: 4px; transition: color .2s, background .2s;
+  display: none;
+}
+.clear-btn.show { display: block; }
+.clear-btn:hover { color: var(--text); background: rgba(255,255,255,.08); }
+.search-hint { font-family: 'Space Mono'; font-size: .6rem; color: var(--muted); margin-top: .6rem; text-transform: uppercase; letter-spacing: .1em; }
+
+/* result card */
+.finder-results { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+.finder-results.hidden { display: none; }
+.result-name {
+  font-family: 'Bebas Neue'; font-size: 1.6rem; letter-spacing: .05em;
+  margin-bottom: 1rem; color: var(--yellow);
+}
+.result-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .result-cards { grid-template-columns: 1fr; } }
+.result-card {
+  border-radius: 12px; padding: 1.25rem;
+  border: 1px solid var(--border2);
+}
+.result-card.lava { background: rgba(255,69,0,.08); border-color: rgba(255,69,0,.3); }
+.result-card.base { background: rgba(0,87,255,.08); border-color: rgba(0,87,255,.3); }
+.result-game {
+  font-family: 'Space Mono'; font-size: .58rem;
+  text-transform: uppercase; letter-spacing: .15em;
+  color: var(--muted); margin-bottom: .3rem;
+}
+.result-team-name {
+  font-family: 'Bebas Neue'; font-size: 1.4rem; letter-spacing: .05em;
+  margin-bottom: .75rem;
+}
+.result-card.lava .result-team-name { color: var(--lava-b); }
+.result-card.base .result-team-name { color: var(--blue-l); }
+.result-mates { display: flex; flex-wrap: wrap; gap: .4rem; }
+.mate-tag {
+  padding: .25rem .65rem; border-radius: 999px;
+  font-size: .8rem; font-weight: 500;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--border2);
+}
+.mate-tag.me {
+  background: var(--yellow); color: var(--dark);
+  border-color: var(--yellow); font-weight: 700;
+}
+.not-found {
+  font-size: .95rem; color: var(--muted);
+  font-style: italic; padding: .5rem 0;
+}
+
+/* all teams grid */
+.teams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px; background: var(--border);
+}
+.team-block { background: var(--card); padding: 1.5rem; }
+.team-block:hover { background: rgba(255,255,255,.03); }
+.team-game-label {
+  font-family: 'Space Mono'; font-size: .55rem;
+  text-transform: uppercase; letter-spacing: .15em;
+  color: var(--muted); margin-bottom: .35rem;
+}
+.team-block h4 {
+  font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: .05em;
+  margin-bottom: .65rem;
+}
+.team-block.lava h4 { color: var(--lava-b); }
+.team-block.base h4 { color: var(--blue-l); }
+.member-list { display: flex; flex-direction: column; gap: .3rem; }
+.member { font-size: .83rem; color: var(--muted); }
+.member::before { content: '— '; color: var(--border2); }
+</style>
+
+<script>
+/* CURSOR */
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top = e.clientY + 'px';
+});
+function curBig() { cur.classList.add('big'); }
+function curSmall() { cur.classList.remove('big'); }
+
+/* COURT ZOOM */
+function initZoom(id) {
+  const wrap = document.getElementById(id);
+  if (!wrap) return;
+  const svg = wrap.querySelector('svg');
+  let zoomed = false;
+  wrap.addEventListener('mousemove', e => {
+    const r = wrap.getBoundingClientRect();
+    svg.style.transformOrigin =
+      ((e.clientX - r.left) / r.width * 100).toFixed(1) + '% ' +
+      ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%';
+  });
+  wrap.addEventListener('mouseenter', () => { wrap.classList.add('zoomed'); curBig(); });
+  wrap.addEventListener('mouseleave', () => { wrap.classList.remove('zoomed'); svg.style.transformOrigin = '50% 50%'; curSmall(); });
+  wrap.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0]; const r = wrap.getBoundingClientRect();
+    svg.style.transformOrigin =
+      ((t.clientX - r.left) / r.width * 100).toFixed(1) + '% ' +
+      ((t.clientY - r.top) / r.height * 100).toFixed(1) + '%';
+    zoomed = !zoomed; wrap.classList.toggle('zoomed', zoomed);
+  }, { passive: false });
+}
+initZoom('lavaZoom');
+initZoom('agawanZoom');
+document.querySelectorAll('a, button, input, summary, .btn, .tog, .search-box').forEach(el => {
+  el.addEventListener('mouseenter', curBig);
+  el.addEventListener('mouseleave', curSmall);
+});
+
+/* ══ TIMETABLE ══════════════════════════════════════════════ */
+const GROUPS = [
+  { id: 'prelim', label: 'Preliminaries', color: '#6B7280', toggleable: true,
+    items: [{ dur: 2, act: 'Prayer' }, { dur: 3, act: 'Warm-up' }] },
+  { id: 'buffer', label: 'Buffer Time', color: '#FFD60A', buf: true, toggleable: true,
+    items: [{ dur: 15, act: '⏳ Buffer Time' }] },
+  { label: 'The Floor is Lava — 4 min per round', color: '#FF6B35',
+    items: [
+      { dur: 2, act: 'Explanation of Game' },
+      { dur: 3, act: 'Trial Round' },
+      { dur: 4, act: 'Team A vs Team B' },
+      { dur: 4, act: 'Team B vs Team A' },
+      { dur: 4, act: 'Team C vs Team D' },
+      { dur: 4, act: 'Team D vs Team C' },
+      { dur: 4, act: 'Match 1 winner vs Match 2 winner' },
+      { dur: 4, act: 'Match 2 winner vs Match 1 winner' },
+    ]},
+  { label: 'Agawan Base — Laro ng Lahi · 8 min per round', color: '#5CA8FF',
+    items: [
+      { dur: 2, act: 'Explanation of Game' },
+      { dur: 3, act: 'Trial Round' },
+      { dur: 8, act: 'Team A vs Team B' },
+      { dur: 8, act: 'Team C vs Team D' },
+      { dur: 8, act: 'Match 1 winner vs Match 2 winner' },
+    ]},
+  { label: 'Post-Game', color: '#6B7280',
+    items: [{ dur: 2, act: '🧘 Cool Down' }] },
+];
+
+function toMins(s) { const [h, m] = s.split(':').map(Number); return h * 60 + m; }
+function fmt(m) {
+  const h = Math.floor(m / 60) % 24, mm = m % 60;
+  const ap = h < 12 ? 'AM' : 'PM', h12 = h % 12 || 12;
+  return `${h12}:${String(mm).padStart(2, '0')} ${ap}`;
+}
+
+function renderTT() {
+  let cursor = toMins(document.getElementById('startTime').value);
+  const showPrelim = document.getElementById('togPrelim').checked;
+  const showBuffer = document.getElementById('togBuffer').checked;
+  const prelimDur  = parseInt(document.getElementById('durPrelim').value) || 5;
+  const bufferDur  = parseInt(document.getElementById('durBuffer').value) || 15;
+  const c = document.getElementById('ttContainer');
+  c.innerHTML = '';
+
+  // Update disabled state visually
+  document.querySelector('.toggle-row:nth-child(1)').classList.toggle('disabled', !showPrelim);
+  document.querySelector('.toggle-row:nth-child(2)').classList.toggle('disabled', !showBuffer);
+
+  GROUPS.forEach(grp => {
+    // skip toggled-off groups
+    if (grp.id === 'prelim' && !showPrelim) return;
+    if (grp.id === 'buffer' && !showBuffer) return;
+
+    // For toggleable groups, use the custom duration input as total time
+    let items = grp.items;
+    if (grp.id === 'prelim') {
+      // redistribute: prayer gets 2min or proportional, warm-up gets rest
+      const prayerDur = Math.min(2, prelimDur);
+      const warmupDur = Math.max(1, prelimDur - prayerDur);
+      items = [{ dur: prayerDur, act: 'Prayer' }, { dur: warmupDur, act: 'Warm-up' }];
+    }
+    if (grp.id === 'buffer') {
+      items = [{ dur: bufferDur, act: '⏳ Buffer Time' }];
+    }
+
+    let rows = '';
+    items.forEach(item => {
+      const end = cursor + item.dur;
+      rows += `<tr>
+        <td class="td-t">${fmt(cursor)} – ${fmt(end)}</td>
+        <td class="td-d">${item.dur} min</td>
+        <td class="td-a${grp.buf ? ' td-buf' : ''}">${item.act}</td>
       </tr>`;
-    current = end;
+      cursor = end;
+    });
+
+    const div = document.createElement('div');
+    div.className = 'tt-group';
+    div.innerHTML = `
+      <div class="tt-label">
+        <span class="tt-dot" style="background:${grp.color}"></span>${grp.label}
+      </div>
+      <div class="tt-wrap">
+        <table>
+          <thead><tr><th>Time</th><th style="text-align:center">Dur.</th><th>Activity</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+    c.appendChild(div);
   });
 }
 
-startInput.addEventListener("input", render);
-render();
-</script>
+document.getElementById('startTime').addEventListener('input', renderTT);
+document.getElementById('togPrelim').addEventListener('change', renderTT);
+document.getElementById('togBuffer').addEventListener('change', renderTT);
+document.getElementById('durPrelim').addEventListener('input', renderTT);
+document.getElementById('durBuffer').addEventListener('input', renderTT);
+renderTT();
 
+/* ══ TEAM FINDER ════════════════════════════════════════════ */
+// ─────────────────────────────────────────────────────────────
+// TEAM DATA — replace the placeholder names below with real ones
+// when you have the full list. Format:
+//   { name: 'LASTNAME', lava: 'Team X', agawan: 'Team X' }
+// ─────────────────────────────────────────────────────────────
+const LAVA_TEAMS = {
+  'Team A': ['DELA CRUZ', 'SANTOS', 'REYES', 'GARCIA', 'TORRES'],
+  'Team B': ['FLORES', 'MENDOZA', 'CASTRO', 'BAUTISTA', 'VILLANUEVA'],
+  'Team C': ['RAMOS', 'GONZALES', 'HERNANDEZ', 'AQUINO', 'DIAZ'],
+  'Team D': ['MARTINEZ', 'LOPEZ', 'PEREZ', 'RAMIREZ', 'MORALES'],
+};
+
+const AGAWAN_TEAMS = {
+  'Team A': ['DELA CRUZ', 'FLORES', 'RAMOS', 'MARTINEZ'],
+  'Team B': ['SANTOS', 'MENDOZA', 'GONZALES', 'LOPEZ'],
+  'Team C': ['REYES', 'CASTRO', 'HERNANDEZ', 'PEREZ'],
+  'Team D': ['GARCIA', 'BAUTISTA', 'AQUINO', 'RAMIREZ'],
+};
+// ─────────────────────────────────────────────────────────────
+
+// Build the all-teams grid
+function buildTeamsGrid() {
+  const grid = document.getElementById('teamsGrid');
+  grid.innerHTML = '';
+
+  // Lava teams
+  Object.entries(LAVA_TEAMS).forEach(([team, members]) => {
+    const div = document.createElement('div');
+    div.className = 'team-block lava';
+    div.innerHTML = `
+      <p class="team-game-label">🔥 Floor is Lava</p>
+      <h4>${team}</h4>
+      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>`;
+    grid.appendChild(div);
+  });
+
+  // Agawan teams
+  Object.entries(AGAWAN_TEAMS).forEach(([team, members]) => {
+    const div = document.createElement('div');
+    div.className = 'team-block base';
+    div.innerHTML = `
+      <p class="team-game-label">🏁 Agawan Base</p>
+      <h4>${team}</h4>
+      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>`;
+    grid.appendChild(div);
+  });
+}
+buildTeamsGrid();
+
+// Search logic
+function findTeams(query) {
+  query = query.trim().toUpperCase();
+  if (!query) return null;
+
+  let lavaTeam = null, lavaMembers = [];
+  let agawanTeam = null, agawanMembers = [];
+
+  for (const [team, members] of Object.entries(LAVA_TEAMS)) {
+    if (members.some(m => m.includes(query))) {
+      lavaTeam = team; lavaMembers = members; break;
+    }
+  }
+  for (const [team, members] of Object.entries(AGAWAN_TEAMS)) {
+    if (members.some(m => m.includes(query))) {
+      agawanTeam = team; agawanMembers = members; break;
+    }
+  }
+
+  return { lavaTeam, lavaMembers, agawanTeam, agawanMembers };
+}
+
+function renderResults(query) {
+  const res = document.getElementById('finderResults');
+  const clear = document.getElementById('clearSearch');
+
+  if (!query.trim()) {
+    res.classList.add('hidden');
+    clear.classList.remove('show');
+    return;
+  }
+
+  clear.classList.add('show');
+  const found = findTeams(query);
+
+  if (!found || (!found.lavaTeam && !found.agawanTeam)) {
+    res.classList.remove('hidden');
+    res.innerHTML = `<p class="not-found">No one found for "<strong>${query}</strong>" — check spelling or try a partial name.</p>`;
+    return;
+  }
+
+  const q = query.trim().toUpperCase();
+
+  const lavaCard = found.lavaTeam ? `
+    <div class="result-card lava">
+      <p class="result-game">🔥 Floor is Lava</p>
+      <p class="result-team-name">${found.lavaTeam}</p>
+      <div class="result-mates">
+        ${found.lavaMembers.map(m => `<span class="mate-tag${m.includes(q) ? ' me' : ''}">${m}</span>`).join('')}
+      </div>
+    </div>` : `<div class="result-card lava"><p class="result-game">🔥 Floor is Lava</p><p class="not-found">Not assigned yet</p></div>`;
+
+  const agawanCard = found.agawanTeam ? `
+    <div class="result-card base">
+      <p class="result-game">🏁 Agawan Base</p>
+      <p class="result-team-name">${found.agawanTeam}</p>
+      <div class="result-mates">
+        ${found.agawanMembers.map(m => `<span class="mate-tag${m.includes(q) ? ' me' : ''}">${m}</span>`).join('')}
+      </div>
+    </div>` : `<div class="result-card base"><p class="result-game">🏁 Agawan Base</p><p class="not-found">Not assigned yet</p></div>`;
+
+  res.classList.remove('hidden');
+  res.innerHTML = `
+    <p class="result-name">Results for "${query.trim()}"</p>
+    <div class="result-cards">${lavaCard}${agawanCard}</div>`;
+}
+
+const searchInput = document.getElementById('nameSearch');
+searchInput.addEventListener('input', e => renderResults(e.target.value));
+document.getElementById('clearSearch').addEventListener('click', () => {
+  searchInput.value = '';
+  renderResults('');
+  searchInput.focus();
+});
+
+/* SCROLL REVEAL */
+if ('IntersectionObserver' in window) {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('.fu').forEach(el => {
+    el.classList.add('animate');
+    obs.observe(el);
+  });
+}
+</script>
 </body>
 </html>
