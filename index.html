@@ -454,12 +454,17 @@ footer {
           <li>Catchers must keep <strong>both feet inside the circle</strong> at all times.</li>
           <li>They may stretch and reach to tag Players — as long as they don't step out.</li>
           <li>Leaving the circle = 1 warning. <strong>Two warnings = frozen for 5 seconds</strong>, no tagging allowed.</li>
+          <li>Every <strong>60 seconds</strong>, Catchers must rotate to a new circle when signaled.</li>
+          <li>If a Catcher fails to rotate, they are <strong>frozen for 5 seconds</strong>.</li>
+          <li>At the 2-minute mark, all Catchers freeze for <strong>5 seconds</strong> (fatigue rule).</li>
         </ul>
       </details>
       <details class="acc">
         <summary>Player Rules <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Must move only on safe mats. <strong>Touching the bare court floor = elimination.</strong></li>
+          <li>Players may only step on mats. <strong>Touching the floor = going back to the Start Zone</strong>.
+          <li>Each Player is allowed <strong>up to 3 floor touches per round</strong>.</li>
+          <li>On the 3rd floor touch, the Player goes to the will be <strong>frozen for 15 seconds</strong>.</li>
           <li>Players may jump creatively between platforms.</li>
           <li>No improvised mobility aids allowed (e.g. handkerchief shoe nets). Speed and skill only.</li>
         </ul>
@@ -467,10 +472,52 @@ footer {
       <details class="acc">
         <summary>Scoring &amp; Rounds <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>After one round, roles reverse — the same teams swap Catcher and Player positions.</li>
-          <li>Whichever team catches <strong>more Players across both rounds</strong> wins the game.</li>
+          <li>Each round lasts a fixed <strong>4 minutes</strong>.</li>
+          <li>Players may cross the court multiple times within one round.</li>
+          <li>Each successful crossing = <strong>1 point</strong>.</li>
+          <li>After scoring, Players immediately return to the Start Zone.</li>
+          <li>Teams earn points for successful crossings and tags.</li>
+          <li>The team with the <strong>higher total score across both rounds</strong> wins.</li>
+          <li>The team with the most points at the end of the round wins.</li>
         </ul>
-      </details>
+      </details>        
+    </ul>
+<details class="acc">
+  <summary>Lava Progression <span class="acc-arrow">+</span></summary>
+  <ul class="acc-body">
+    <li>At <strong>1:30</strong> into the round, one mat is declared “burned.”</li>
+    <li>Burned mats may no longer be stepped on.</li>
+    <li>The teacher or referee announces: <strong>“THE LAVA IS RISING.”</strong></li>
+    <li>Burned mats are marked visually (cone, tape, or crossed arms).</li>
+  </ul>
+</details>
+    </div>
+  </div>
+</div>
+<!-- LIVE SCORE & TIMER -->
+<div class="live-panel">
+  <div class="timer-box">
+    <p class="lbl">Round Timer</p>
+    <div id="roundTimer" class="timer">04:00</div>
+    <div class="timer-controls">
+      <button onclick="startTimer()">▶ Start</button>
+      <button onclick="pauseTimer()">⏸ Pause</button>
+      <button onclick="resetTimer()">🔄 Reset</button>
+    </div>
+  </div>
+
+  <div class="score-box players">
+    <p class="lbl">🟦 Players</p>
+    <div id="playerScore" class="score">0</div>
+    <button onclick="addPlayer()">+1 Crossing</button>
+  </div>
+
+  <div class="score-box catchers">
+    <p class="lbl">🟥 Catchers</p>
+    <div id="catcherScore" class="score">0</div>
+    <div class="score-actions">
+      <button onclick="addCatcher()">+1 Tag</button>
+      <button onclick="bonusCatcher()">+2 Bonus</button>
     </div>
   </div>
 </div>
@@ -566,7 +613,33 @@ footer {
       </svg>
       <div class="court-hint">Hover / tap to zoom</div>
     </div>
+	<!-- LIVE SCORE & TIMER -->
+<div class="live-panel">
+  <div class="timer-box">
+    <p class="lbl">Round Timer</p>
+    <div id="roundTimer" class="timer">04:00</div>
+    <div class="timer-controls">
+      <button onclick="startTimer()">▶ Start</button>
+      <button onclick="pauseTimer()">⏸ Pause</button>
+      <button onclick="resetTimer()">🔄 Reset</button>
+    </div>
+  </div>
 
+  <div class="score-box players">
+    <p class="lbl">🟦 Players</p>
+    <div id="playerScore" class="score">0</div>
+    <button onclick="addPlayer()">+1 Crossing</button>
+  </div>
+
+  <div class="score-box catchers">
+    <p class="lbl">🟥 Catchers</p>
+    <div id="catcherScore" class="score">0</div>
+    <div class="score-actions">
+      <button onclick="addCatcher()">+1 Tag</button>
+      <button onclick="bonusCatcher()">+2 Bonus</button>
+    </div>
+  </div>
+</div>
     <!-- RULE DROPDOWNS -->
     <div class="acc-wrap">
       <details class="acc" open>
@@ -850,6 +923,87 @@ footer {
 .member-list { display: flex; flex-direction: column; gap: .3rem; }
 .member { font-size: .83rem; color: var(--muted); }
 .member::before { content: '— '; color: var(--border2); }
+
+/* ── LIVE SCORE PANEL ── */
+.live-panel {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+}
+
+.timer-box, .score-box {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.lbl {
+  font-family: 'Space Mono';
+  font-size: .6rem;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+
+.timer {
+  font-family: 'Bebas Neue';
+  font-size: 3rem;
+  letter-spacing: .08em;
+  margin-bottom: .5rem;
+  color: var(--yellow);
+}
+
+.timer-controls {
+  display: flex;
+  justify-content: center;
+  gap: .4rem;
+}
+
+.timer-controls button,
+.score-box button {
+  background: none;
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: 'Space Mono';
+  font-size: .6rem;
+  padding: .35rem .6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+
+.timer-controls button:hover,
+.score-box button:hover {
+  background: rgba(255,255,255,.08);
+  transform: translateY(-1px);
+}
+
+.score {
+  font-family: 'Bebas Neue';
+  font-size: 2.6rem;
+  margin: .4rem 0;
+}
+
+.score-box.players .score { color: var(--blue-l); }
+.score-box.catchers .score { color: var(--lava-b); }
+
+.score-actions {
+  display: flex;
+  justify-content: center;
+  gap: .4rem;
+}
+
+@media (max-width: 700px) {
+  .live-panel {
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 
 <script>
@@ -902,12 +1056,12 @@ const GROUPS = [
     items: [
       { dur: 2, act: 'Explanation of Game' },
       { dur: 3, act: 'Trial Round' },
-      { dur: 4, act: 'Team A vs Team B' },
-      { dur: 4, act: 'Team B vs Team A' },
-      { dur: 4, act: 'Team C vs Team D' },
-      { dur: 4, act: 'Team D vs Team C' },
-      { dur: 4, act: 'Match 1 winner vs Match 2 winner' },
-      { dur: 4, act: 'Match 2 winner vs Match 1 winner' },
+      { dur: 4, act: 'Round 1' },
+      { dur: 4, act: 'Round 2' },
+      { dur: 4, act: 'Round 3' },
+      { dur: 4, act: 'Round 4' },
+      { dur: 4, act: 'Round 5' },
+      { dur: 4, act: 'Round 6' },
     ]},
   { label: 'Agawan Base — Laro ng Lahi · 8 min per round', color: '#5CA8FF',
     items: [
@@ -999,10 +1153,8 @@ renderTT();
 //   { name: 'LASTNAME', lava: 'Team X', agawan: 'Team X' }
 // ─────────────────────────────────────────────────────────────
 const LAVA_TEAMS = {
-  'Team A': ['DELA CRUZ', 'SANTOS', 'REYES', 'GARCIA', 'TORRES'],
-  'Team B': ['FLORES', 'MENDOZA', 'CASTRO', 'BAUTISTA', 'VILLANUEVA'],
-  'Team C': ['RAMOS', 'GONZALES', 'HERNANDEZ', 'AQUINO', 'DIAZ'],
-  'Team D': ['MARTINEZ', 'LOPEZ', 'PEREZ', 'RAMIREZ', 'MORALES'],
+  'CATCHERS': ['DELA CRUZ', 'SANTOS', 'REYES', 'GARCIA', 'TORRES', 'LUATON', 'TEST', 'TEST2'],
+  'PLAYERS': ['FLORES', 'MENDOZA', 'CASTRO', 'BAUTISTA', 'VILLANUEVA'],
 };
 
 const AGAWAN_TEAMS = {
@@ -1127,6 +1279,72 @@ if ('IntersectionObserver' in window) {
     obs.observe(el);
   });
 }
+/* ══ LIVE TIMER & SCORE ════════════════════════════════════ */
+
+let timeLeft = 240; // 4 minutes
+let timerInterval = null;
+let running = false;
+
+let pScore = 0;
+let cScore = 0;
+
+const timerEl = document.getElementById('roundTimer');
+const pEl = document.getElementById('playerScore');
+const cEl = document.getElementById('catcherScore');
+
+function updateTimer() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+  if (timeLeft <= 10) {
+    timerEl.style.color = 'var(--lava)';
+  } else {
+    timerEl.style.color = 'var(--yellow)';
+  }
+}
+
+function startTimer() {
+  if (running) return;
+  running = true;
+  timerInterval = setInterval(() => {
+    if (timeLeft <= 0) {
+      pauseTimer();
+      timerEl.textContent = '00:00';
+      return;
+    }
+    timeLeft--;
+    updateTimer();
+  }, 1000);
+}
+
+function pauseTimer() {
+  running = false;
+  clearInterval(timerInterval);
+}
+
+function resetTimer() {
+  pauseTimer();
+  timeLeft = 240;
+  updateTimer();
+}
+
+function addPlayer() {
+  pScore++;
+  pEl.textContent = pScore;
+}
+
+function addCatcher() {
+  cScore++;
+  cEl.textContent = cScore;
+}
+
+function bonusCatcher() {
+  cScore += 2;
+  cEl.textContent = cScore;
+}
+
+updateTimer();
 </script>
 </body>
 </html>
