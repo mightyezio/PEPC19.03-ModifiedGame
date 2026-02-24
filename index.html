@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Game Day — PE Portfolio</title>
+<title>Game Day — [PEPC 19.03] Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Space+Mono&display=swap" rel="stylesheet">
 <style>
@@ -487,7 +487,7 @@ footer {
   <ul class="acc-body">
     <li>At <strong>1:30</strong> into the round, one mat is declared “burned.”</li>
     <li>Burned mats may no longer be stepped on.</li>
-    <li>The teacher or referee announces: <strong>“THE LAVA IS RISING.”</strong></li>
+    <li>The referee announces: <strong>“THE LAVA IS RISING.”</strong></li>
     <li>Burned mats are marked visually (cone, tape, or crossed arms).</li>
   </ul>
 </details>
@@ -761,7 +761,7 @@ footer {
 </section>
 
 <footer>
-  © 2025 · PE Class — Game Day Portfolio · Floor is Lava &amp; Agawan Base
+  © 2026 · [PEPC 19.03] - Modified Game Portfolio · Floor is Lava &amp; Agawan Base · Made with <3
 </footer>
 
 <style>
@@ -1148,20 +1148,15 @@ renderTT();
 
 /* ══ TEAM FINDER ════════════════════════════════════════════ */
 // ─────────────────────────────────────────────────────────────
-// TEAM DATA — replace the placeholder names below with real ones
-// when you have the full list. Format:
-//   { name: 'LASTNAME', lava: 'Team X', agawan: 'Team X' }
-// ─────────────────────────────────────────────────────────────
+// TEAM DATA
 const LAVA_TEAMS = {
   'CATCHERS': ['DELA CRUZ', 'SANTOS', 'REYES', 'GARCIA', 'TORRES', 'LUATON', 'TEST', 'TEST2'],
   'PLAYERS': ['FLORES', 'MENDOZA', 'CASTRO', 'BAUTISTA', 'VILLANUEVA'],
 };
 
 const AGAWAN_TEAMS = {
-  'Team A': ['DELA CRUZ', 'FLORES', 'RAMOS', 'MARTINEZ'],
-  'Team B': ['SANTOS', 'MENDOZA', 'GONZALES', 'LOPEZ'],
-  'Team C': ['REYES', 'CASTRO', 'HERNANDEZ', 'PEREZ'],
-  'Team D': ['GARCIA', 'BAUTISTA', 'AQUINO', 'RAMIREZ'],
+  'Team A': ['DELA CRUZ', 'FLORES', 'RAMOS', 'MARTINEZ', 'SANTOS', 'MENDOZA'],
+  'Team B': ['REYES', 'CASTRO', 'GARCIA', 'BAUTISTA', 'AQUINO', 'RAMIREZ'],
 };
 // ─────────────────────────────────────────────────────────────
 
@@ -1174,26 +1169,34 @@ function buildTeamsGrid() {
   Object.entries(LAVA_TEAMS).forEach(([team, members]) => {
     const div = document.createElement('div');
     div.className = 'team-block lava';
+    div.dataset.span = team === 'PLAYERS' ? 3 : 1; // Catchers = 1, Players = 3
+
     div.innerHTML = `
-      <p class="team-game-label">🔥 Floor is Lava</p>
+      <p class="team-game-label">🔥 Floor Is Lava</p>
       <h4>${team}</h4>
-      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>`;
+      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>
+    `;
     grid.appendChild(div);
   });
 
-  // Agawan teams
+  // Agawan Base — 2 teams, each spans 2 columns
   Object.entries(AGAWAN_TEAMS).forEach(([team, members]) => {
     const div = document.createElement('div');
     div.className = 'team-block base';
+    div.dataset.span = 2;
+
     div.innerHTML = `
       <p class="team-game-label">🏁 Agawan Base</p>
       <h4>${team}</h4>
-      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>`;
+      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>
+    `;
     grid.appendChild(div);
   });
 }
-buildTeamsGrid();
 
+// INITIALIZE
+buildTeamsGrid();
+	
 // Search logic
 function findTeams(query) {
   query = query.trim().toUpperCase();
