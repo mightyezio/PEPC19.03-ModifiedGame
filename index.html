@@ -438,6 +438,36 @@ footer {
       </svg>
       <div class="court-hint">Hover / tap to zoom</div>
     </div>
+	  
+	  <!-- LIVE SCORE & TIMER -->
+	<section>
+		<div class="live-panel">
+		  <div class="timer-box">
+		    <p class="lbl">Round Timer</p>
+		    <div id="roundTimer" class="timer">04:00</div>
+		    <div class="timer-controls">
+		      <button onclick="startTimer()">▶ Start</button>
+		      <button onclick="pauseTimer()">⏸ Pause</button>
+		      <button onclick="resetTimer()">🔄 Reset</button>
+		    </div>
+		  </div>
+		
+		  <div class="score-box players">
+		    <p class="lbl">🟦 Players</p>
+		    <div id="playerScore" class="score">0</div>
+		    <button onclick="addPlayer()">+1 Crossing</button>
+		  </div>
+		
+		  <div class="score-box catchers">
+		    <p class="lbl">🟥 Catchers</p>
+		    <div id="catcherScore" class="score">0</div>
+		    <div class="score-actions">
+		      <button onclick="addCatcher()">+1 Tag</button>
+		      <button onclick="bonusCatcher()">+2 Bonus</button>
+		    </div>
+		  </div>
+		</div>
+	</section>
 
     <!-- RULE DROPDOWNS -->
     <div class="acc-wrap">
@@ -494,34 +524,7 @@ footer {
     </div>
   </div>
 </div>
-<!-- LIVE SCORE & TIMER -->
-<div class="live-panel">
-  <div class="timer-box">
-    <p class="lbl">Round Timer</p>
-    <div id="roundTimer" class="timer">04:00</div>
-    <div class="timer-controls">
-      <button onclick="startTimer()">▶ Start</button>
-      <button onclick="pauseTimer()">⏸ Pause</button>
-      <button onclick="resetTimer()">🔄 Reset</button>
-    </div>
-  </div>
 
-  <div class="score-box players">
-    <p class="lbl">🟦 Players</p>
-    <div id="playerScore" class="score">0</div>
-    <button onclick="addPlayer()">+1 Crossing</button>
-  </div>
-
-  <div class="score-box catchers">
-    <p class="lbl">🟥 Catchers</p>
-    <div id="catcherScore" class="score">0</div>
-    <div class="score-actions">
-      <button onclick="addCatcher()">+1 Tag</button>
-      <button onclick="bonusCatcher()">+2 Bonus</button>
-    </div>
-  </div>
-</div>
-</section>
 
 <div class="divider"></div>
 
@@ -613,33 +616,7 @@ footer {
       </svg>
       <div class="court-hint">Hover / tap to zoom</div>
     </div>
-	<!-- LIVE SCORE & TIMER -->
-<div class="live-panel">
-  <div class="timer-box">
-    <p class="lbl">Round Timer</p>
-    <div id="roundTimer" class="timer">04:00</div>
-    <div class="timer-controls">
-      <button onclick="startTimer()">▶ Start</button>
-      <button onclick="pauseTimer()">⏸ Pause</button>
-      <button onclick="resetTimer()">🔄 Reset</button>
-    </div>
-  </div>
-
-  <div class="score-box players">
-    <p class="lbl">🟦 Players</p>
-    <div id="playerScore" class="score">0</div>
-    <button onclick="addPlayer()">+1 Crossing</button>
-  </div>
-
-  <div class="score-box catchers">
-    <p class="lbl">🟥 Catchers</p>
-    <div id="catcherScore" class="score">0</div>
-    <div class="score-actions">
-      <button onclick="addCatcher()">+1 Tag</button>
-      <button onclick="bonusCatcher()">+2 Bonus</button>
-    </div>
-  </div>
-</div>
+	
     <!-- RULE DROPDOWNS -->
     <div class="acc-wrap">
       <details class="acc" open>
