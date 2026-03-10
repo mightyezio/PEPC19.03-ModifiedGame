@@ -253,11 +253,12 @@ details.acc[open] > summary .acc-arrow {
 /* ── TIMETABLE ── */
 .tt-section { background: var(--mid); }
 .time-bar {
-  display: flex; align-items: center; flex-wrap: wrap; gap: 1rem;
+  display: flex; align-items: flex-start; flex-wrap: wrap; gap: 1.25rem;
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 1.2rem 1.75rem; margin-bottom: 2.5rem;
+  border-radius: 12px; padding: 1.25rem 1.75rem; margin-bottom: 2.5rem;
 }
-.time-bar label {
+.time-bar-left { display: flex; flex-direction: column; gap: .4rem; }
+.time-bar-left label {
   font-family: 'Space Mono'; font-size: .62rem;
   text-transform: uppercase; letter-spacing: .14em; color: var(--muted);
 }
@@ -268,8 +269,47 @@ details.acc[open] > summary .acc-arrow {
   font-family: 'Space Mono'; font-size: 1rem;
   width: 130px;
 }
-.time-bar input:focus { outline: none; border-color: var(--yellow); }
-.time-bar span { font-family: 'Space Mono'; font-size: .58rem; color: var(--muted); }
+.time-bar input[type=time]:focus { outline: none; border-color: var(--yellow); }
+
+.tt-toggles { display: flex; flex-direction: column; gap: .7rem; justify-content: center; }
+.toggle-row {
+  display: flex; align-items: center; gap: .7rem;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 8px; padding: .55rem 1rem;
+}
+.toggle-lbl {
+  font-family: 'Space Mono'; font-size: .64rem;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
+  min-width: 110px;
+}
+.tog { position: relative; display: inline-flex; cursor: pointer; }
+.tog input { position: absolute; opacity: 0; width: 0; height: 0; }
+.tog-track {
+  width: 40px; height: 22px; border-radius: 999px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid var(--border2);
+  transition: background .25s;
+  position: relative;
+}
+.tog input:checked ~ .tog-track { background: var(--yellow); border-color: var(--yellow); }
+.tog-thumb {
+  position: absolute; top: 2px; left: 2px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--muted); transition: transform .25s, background .25s;
+}
+.tog input:checked ~ .tog-track .tog-thumb { transform: translateX(18px); background: var(--dark); }
+.dur-input {
+  width: 52px; background: var(--dark);
+  border: 1px solid var(--border2); color: var(--text);
+  border-radius: 6px; padding: .3rem .5rem;
+  font-family: 'Space Mono'; font-size: .8rem; text-align: center;
+}
+.dur-input:focus { outline: none; border-color: var(--yellow); }
+.dur-unit { font-family: 'Space Mono'; font-size: .6rem; color: var(--muted); }
+.toggle-row.disabled .toggle-lbl,
+.toggle-row.disabled .dur-unit { opacity: .35; }
+.toggle-row.disabled .dur-input { opacity: .35; pointer-events: none; }
 
 .tt-group { margin-bottom: 2rem; }
 .tt-label {
@@ -298,6 +338,122 @@ tbody tr:hover td { background: rgba(255,255,255,.02); }
 .td-a { font-size: .87rem; }
 .td-buf { color: var(--yellow); font-style: italic; }
 
+/* ── LIVE SCORE PANEL ── */
+.live-panel {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-top: 1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+}
+.timer-box, .score-box {
+  background: var(--dark);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  text-align: center;
+}
+.lbl {
+  font-family: 'Space Mono'; font-size: .6rem;
+  text-transform: uppercase; letter-spacing: .14em;
+  color: var(--muted); margin-bottom: .4rem;
+}
+.timer {
+  font-family: 'Bebas Neue'; font-size: 3rem;
+  letter-spacing: .08em; margin-bottom: .5rem;
+  color: var(--yellow);
+}
+.timer-controls { display: flex; justify-content: center; gap: .4rem; }
+.timer-controls button, .score-box button {
+  background: none; border: 1px solid var(--border2);
+  color: var(--text); font-family: 'Space Mono'; font-size: .6rem;
+  padding: .35rem .6rem; border-radius: 6px; cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.timer-controls button:hover, .score-box button:hover {
+  background: rgba(255,255,255,.08); transform: translateY(-1px);
+}
+.score { font-family: 'Bebas Neue'; font-size: 2.6rem; margin: .4rem 0; }
+.score-box.players .score { color: var(--blue-l); }
+.score-box.catchers .score { color: var(--lava-b); }
+.score-actions { display: flex; justify-content: center; gap: .4rem; }
+@media (max-width: 700px) { .live-panel { grid-template-columns: 1fr; } }
+
+/* ── TEAM FINDER ── */
+.finder-wrap {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.finder-search { padding: 2rem; border-bottom: 1px solid var(--border); }
+.search-box {
+  display: flex; align-items: center; gap: .75rem;
+  background: var(--dark); border: 1px solid var(--border2);
+  border-radius: 10px; padding: .75rem 1rem;
+  transition: border-color .2s;
+}
+.search-box:focus-within { border-color: var(--yellow); }
+.search-icon { font-size: 1rem; flex-shrink: 0; }
+.search-box input {
+  flex: 1; background: none; border: none; outline: none;
+  color: var(--text); font-family: 'DM Sans'; font-size: 1.05rem; font-weight: 500;
+}
+.search-box input::placeholder { color: var(--muted); font-weight: 400; }
+.clear-btn {
+  background: none; border: none; color: var(--muted);
+  cursor: pointer; font-size: .9rem; padding: .2rem .4rem;
+  border-radius: 4px; transition: color .2s, background .2s; display: none;
+}
+.clear-btn.show { display: block; }
+.clear-btn:hover { color: var(--text); background: rgba(255,255,255,.08); }
+.search-hint { font-family: 'Space Mono'; font-size: .6rem; color: var(--muted); margin-top: .6rem; text-transform: uppercase; letter-spacing: .1em; }
+.finder-results { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
+.finder-results.hidden { display: none; }
+.result-name { font-family: 'Bebas Neue'; font-size: 1.6rem; letter-spacing: .05em; margin-bottom: 1rem; color: var(--yellow); }
+.result-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .result-cards { grid-template-columns: 1fr; } }
+.result-card { border-radius: 12px; padding: 1.25rem; border: 1px solid var(--border2); }
+.result-card.lava { background: rgba(255,69,0,.08); border-color: rgba(255,69,0,.3); }
+.result-card.base { background: rgba(0,87,255,.08); border-color: rgba(0,87,255,.3); }
+.result-game { font-family: 'Space Mono'; font-size: .58rem; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); margin-bottom: .3rem; }
+.result-team-name { font-family: 'Bebas Neue'; font-size: 1.4rem; letter-spacing: .05em; margin-bottom: .75rem; }
+.result-card.lava .result-team-name { color: var(--lava-b); }
+.result-card.base .result-team-name { color: var(--blue-l); }
+.result-mates { display: flex; flex-wrap: wrap; gap: .4rem; }
+.mate-tag {
+  padding: .25rem .65rem; border-radius: 999px; font-size: .8rem; font-weight: 500;
+  background: rgba(255,255,255,.06); border: 1px solid var(--border2);
+}
+.mate-tag.me { background: var(--yellow); color: var(--dark); border-color: var(--yellow); font-weight: 700; }
+.not-found { font-size: .95rem; color: var(--muted); font-style: italic; padding: .5rem 0; }
+.teams-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1px; background: var(--border);
+}
+.team-block { background: var(--card); padding: 1.5rem; }
+.team-block:hover { background: rgba(255,255,255,.03); }
+.team-game-label { font-family: 'Space Mono'; font-size: .55rem; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); margin-bottom: .35rem; }
+.team-block h4 { font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: .05em; margin-bottom: .65rem; }
+.team-block.lava h4 { color: var(--lava-b); }
+.team-block.base h4 { color: var(--blue-l); }
+.member-list { display: flex; flex-direction: column; gap: .3rem; }
+.member { font-size: .83rem; color: var(--muted); }
+.member::before { content: '— '; color: var(--border2); }
+
+/* ── CLIPS BADGE ── */
+.clips-info {
+  display: flex; gap: .75rem; flex-wrap: wrap;
+  padding: 1rem 1.75rem; border-bottom: 1px solid var(--border);
+  background: rgba(255,214,10,.03);
+}
+.clip-stat {
+  display: flex; align-items: center; gap: .5rem;
+  background: var(--dark); border: 1px solid var(--border2);
+  border-radius: 8px; padding: .5rem 1rem;
+}
+.clip-stat .cs-lbl { font-family: 'Space Mono'; font-size: .58rem; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.clip-stat .cs-val { font-family: 'Bebas Neue'; font-size: 1.2rem; color: var(--yellow); margin-left: .3rem; }
+
 /* ── FOOTER ── */
 footer {
   padding: 2rem; text-align: center;
@@ -306,7 +462,7 @@ footer {
   color: var(--muted); letter-spacing: .1em; text-transform: uppercase;
 }
 
-/* ── SCROLL REVEAL — starts visible, animates if JS works ── */
+/* ── SCROLL REVEAL ── */
 .fu { opacity: 1; transform: none; }
 .fu.animate { opacity: 0; transform: translateY(24px); transition: opacity .55s ease, transform .55s ease; }
 .fu.animate.vis { opacity: 1; transform: none; }
@@ -359,20 +515,20 @@ footer {
 
   <div class="card acc-lava fu">
     <div class="card-top">
-      <span class="badge badge-lava">🔥 2 Teams</span>
+      <span class="badge badge-lava">🔥 2 Teams · 6 Catchers vs 16 Players</span>
       <h3 style="color:var(--lava-b)">Floor is Lava</h3>
-      <p class="desc">Players navigate a lava-covered court using only mats as safe zones, while Catchers — locked inside their circles — try to tag them. Cross the court. Don't touch the floor.</p>
+      <p class="desc">Players navigate a lava-covered court using only mats as safe zones, while Catchers — locked inside their circles — try to tag them. Cross the court. Don't touch the floor. Watch out for Lava Down.</p>
     </div>
 
     <!-- objectives -->
     <div class="obj">
       <div class="obj-cell">
         <p class="obj-lbl">🟠 Catchers — Goal</p>
-        <p class="obj-txt">Capture as many Players as possible without leaving your assigned circle.</p>
+        <p class="obj-txt">Tag as many Players as possible without leaving your assigned circle. During Lava Down, leave your circle and hunt freely.</p>
       </div>
       <div class="obj-cell">
         <p class="obj-lbl">🏃 Players — Goal</p>
-        <p class="obj-txt">Reach the other side of the court using only the mats, without being caught.</p>
+        <p class="obj-txt">Cross to the other side of the court using only the mats without being tagged. Return to Start Zone and repeat for more points.</p>
       </div>
     </div>
 
@@ -397,12 +553,12 @@ footer {
         <rect width="800" height="420" fill="url(#lavaPat)"/>
         <rect width="800" height="420" fill="url(#lavaBg)"/>
         <rect x="30" y="18" width="740" height="384" rx="5" fill="none" stroke="#FF4500" stroke-width="1.8" stroke-dasharray="8,5" opacity=".45"/>
-        <line x1="400" y1="18" x2="400" y2="402" stroke="#FF6B35" stroke-width="1.2" stroke-dasharray="6,6" opacity=".35"/>
-        <text x="400" y="218" fill="#FF6B35" font-size="9" font-family="monospace" text-anchor="middle" opacity=".45">CENTER</text>
+        <!-- Start / End zones -->
         <rect x="30" y="18" width="52" height="384" rx="5" fill="rgba(92,168,255,.08)" stroke="#5CA8FF" stroke-width="1.3" stroke-dasharray="5,4"/>
         <text x="56" y="212" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" transform="rotate(-90,56,212)">START ZONE</text>
         <rect x="718" y="18" width="52" height="384" rx="5" fill="rgba(92,168,255,.08)" stroke="#5CA8FF" stroke-width="1.3" stroke-dasharray="5,4"/>
         <text x="744" y="212" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" transform="rotate(90,744,212)">END ZONE</text>
+        <!-- Mats -->
         <g fill="#1e4d1e" stroke="#4CAF50" stroke-width="1.4">
           <rect x="90" y="55" width="88" height="52" rx="8"/><text x="134" y="86" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
           <rect x="240" y="125" width="88" height="52" rx="8"/><text x="284" y="156" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
@@ -415,6 +571,7 @@ footer {
           <rect x="498" y="228" width="88" height="52" rx="8"/><text x="542" y="259" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
           <rect x="630" y="308" width="88" height="52" rx="8"/><text x="674" y="339" fill="#4CAF50" font-size="9" font-family="monospace" text-anchor="middle">MAT</text>
         </g>
+        <!-- Catcher circles -->
         <g fill="rgba(255,69,0,.1)" stroke="#FF4500" stroke-width="2" filter="url(#glow1)">
           <circle cx="165" cy="200" r="42"/>
           <text x="165" y="196" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">CATCHER</text>
@@ -429,8 +586,7 @@ footer {
           <text x="400" y="207" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle">ZONE</text>
           <circle cx="400" cy="200" r="5" fill="#FF4500" opacity=".9"/>
         </g>
-        <ellipse cx="200" cy="390" rx="70" ry="16" fill="#FF4500" opacity=".12"/>
-        <ellipse cx="560" cy="38" rx="60" ry="14" fill="#FF4500" opacity=".10"/>
+        <!-- Legend -->
         <rect x="556" y="370" width="11" height="8" rx="2" fill="#1e4d1e" stroke="#4CAF50" stroke-width="1"/>
         <text x="574" y="378" fill="#6B7280" font-size="8" font-family="monospace">Safe Mat</text>
         <circle cx="561" cy="392" r="6" fill="none" stroke="#FF4500" stroke-width="1.5"/>
@@ -438,64 +594,66 @@ footer {
       </svg>
       <div class="court-hint">Hover / tap to zoom</div>
     </div>
-	  
-	  <!-- LIVE SCORE & TIMER -->
-	<section>
-		<div class="live-panel">
-		  <div class="timer-box">
-		    <p class="lbl">Round Timer</p>
-		    <div id="roundTimer" class="timer">04:00</div>
-		    <div class="timer-controls">
-		      <button onclick="startTimer()">▶ Start</button>
-		      <button onclick="pauseTimer()">⏸ Pause</button>
-		      <button onclick="resetTimer()">🔄 Reset</button>
-		    </div>
-		  </div>
-		
-		  <div class="score-box players">
-		    <p class="lbl">🟦 Players</p>
-		    <div id="playerScore" class="score">0</div>
-		    <button onclick="addPlayer()">+1 Crossing</button>
-		  </div>
-		
-		  <div class="score-box catchers">
-		    <p class="lbl">🟥 Catchers</p>
-		    <div id="catcherScore" class="score">0</div>
-		    <div class="score-actions">
-		      <button onclick="addCatcher()">+1 Tag</button>
-		      <button onclick="bonusCatcher()">+2 Bonus</button>
-		    </div>
-		  </div>
-		</div>
-	</section>
+
+    <!-- LIVE SCORE & TIMER -->
+    <div class="live-panel">
+      <div class="timer-box">
+        <p class="lbl">Round Timer</p>
+        <div id="roundTimer" class="timer">04:00</div>
+        <div class="timer-controls">
+          <button onclick="startTimer()">▶ Start</button>
+          <button onclick="pauseTimer()">⏸ Pause</button>
+          <button onclick="resetTimer()">🔄 Reset</button>
+        </div>
+      </div>
+      <div class="score-box players">
+        <p class="lbl">🟦 Players</p>
+        <div id="playerScore" class="score">0</div>
+        <button onclick="addPlayer()">+1 Crossing</button>
+      </div>
+      <div class="score-box catchers">
+        <p class="lbl">🟥 Catchers</p>
+        <div id="catcherScore" class="score">0</div>
+        <div class="score-actions">
+          <button onclick="addCatcher()">+1 Tag</button>
+        </div>
+      </div>
+    </div>
 
     <!-- RULE DROPDOWNS -->
     <div class="acc-wrap">
       <details class="acc" open>
         <summary>Setup <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Mats are scattered around the court to act as safe zones. Players may only step on mats.</li>
-          <li>Circles are spread around the court. Catchers are not allowed to leave their circles.</li>
+          <li>The class is split into <strong>two teams: Catchers (6) and Players (6)</strong>.</li>
+          <li>Mats are scattered around the court to act as safe zones. <strong>Players may only step on mats</strong>.</li>
+          <li>Circles are spread around the court. <strong>Catchers are not allowed to leave their assigned circles</strong>.</li>
         </ul>
       </details>
       <details class="acc">
         <summary>Catcher Rules <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Catchers must keep <strong>both feet inside the circle</strong> at all times.</li>
+          <li>Catchers must keep <strong>both feet inside the circle</strong> at all times during normal play.</li>
           <li>They may stretch and reach to tag Players — as long as they don't step out.</li>
-          <li>Leaving the circle = 1 warning. <strong>Two warnings = frozen for 5 seconds</strong>, no tagging allowed.</li>
-          <li>Every <strong>60 seconds</strong>, Catchers must rotate to a new circle when signaled.</li>
-          <li>If a Catcher fails to rotate, they are <strong>frozen for 5 seconds</strong>.</li>
+          <li>Leaving the circle = <strong>1 warning</strong>. Two warnings = that Catcher is <strong>frozen for 5 seconds</strong>, no tagging allowed.</li>
         </ul>
       </details>
       <details class="acc">
         <summary>Player Rules <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Players may only step on mats. <strong>Touching the floor = going back to the Start Zone</strong>.
-          <li>Each Player is allowed <strong>up to 3 floor touches per round</strong>.</li>
-          <li>On the 3rd floor touch, the Player goes back to the Start Zone and will be <strong>frozen for 15 seconds</strong>.</li>
+          <li>Players may only step on mats. <strong>Touching the bare court floor = elimination</strong> — back to the Start Zone.</li>
           <li>Players may jump creatively between platforms.</li>
-          <li>No improvised mobility aids allowed (e.g. handkerchief shoe nets). Speed and skill only.</li>
+          <li><strong>No improvised mobility aids</strong> allowed (e.g. using handkerchieves as shoe nets). Speed and skill only.</li>
+          <li>After a successful crossing, Players <strong>immediately return to the Start Zone</strong> to attempt another crossing.</li>
+        </ul>
+      </details>
+      <details class="acc">
+        <summary>🌋 Lava Down — Special Rule <span class="acc-arrow">+</span></summary>
+        <ul class="acc-body">
+          <li><strong>Lava Down</strong> is called at random points by the referee using a whistle.</li>
+          <li>During Lava Down: Players may walk safely on the floor without mats, and Catchers may leave their circles to tag Players freely.</li>
+          <li>When the whistle signals <strong>Lava Up</strong>, all normal mechanics resume.</li>
+          <li>Catchers and Players are given <strong>3 seconds</strong> to return to their respective circles and mats when Lava Up is called.</li>
         </ul>
       </details>
       <details class="acc">
@@ -503,26 +661,15 @@ footer {
         <ul class="acc-body">
           <li>Each round lasts a fixed <strong>4 minutes</strong>.</li>
           <li>Players may cross the court multiple times within one round.</li>
-          <li>Each successful crossing earns the Players <strong>1 point</strong>.</li>
-          <li>After scoring, Players immediately return to the Start Zone.</li>
-          <li>Catchers earn points for successful tags.</li>
+          <li>Each successful crossing earns the Players <strong>1 point</strong>. After scoring, Players return immediately to the Start Zone.</li>
+          <li>Catchers earn <strong>1 point per successful tag</strong>.</li>
           <li>The team with the most points at the end of the round wins.</li>
         </ul>
-      </details>        
-    </ul>
-<details class="acc">
-  <summary>Lava Progression <span class="acc-arrow">+</span></summary>
-  <ul class="acc-body">
-    <li>At <strong>1:30</strong> into the round, one mat is declared “burned.”</li>
-    <li>Burned mats may no longer be stepped on.</li>
-    <li>The referee announces: <strong>“THE LAVA IS RISING.”</strong></li>
-    <li>Burned mats are marked visually (cone, tape, or crossed arms).</li>
-  </ul>
-</details>
+      </details>
     </div>
   </div>
 </div>
-
+</section>
 
 <div class="divider"></div>
 
@@ -534,19 +681,39 @@ footer {
 
   <div class="card acc-base fu">
     <div class="card-top">
-      <span class="badge badge-blue">🏁 4 Teams · 2 per Round</span>
+      <span class="badge badge-blue">🏁 2 Pangkat · Sistema ng Clips</span>
       <h3 style="color:var(--blue-l)">Agawan Base</h3>
-      <p class="desc">A Filipino classic reimagined with modified prisoner mechanics, neutral safe zones, and base-guard limits. Pure speed and strategy — no violence allowed.</p>
+      <p class="desc">Ang Agawan Base ay isang larong pangkat na nangangailangan ng bilis, diskarte, at teamwork. Bawat pangkat ay magkakaroon ng sariling base na babantayan nila habang sinusubukang agawin ang base ng kalaban at maubos ang lakas (clips) ng kalaban at protektahan ang sariling koponan.</p>
+    </div>
+
+    <!-- clips info bar -->
+    <div class="clips-info">
+      <div class="clip-stat">
+        <span class="cs-lbl">Clips bawat Pangkat</span>
+        <span class="cs-val">20</span>
+      </div>
+      <div class="clip-stat">
+        <span class="cs-lbl">Miyembro bawat Pangkat</span>
+        <span class="cs-val">10–12</span>
+      </div>
+      <div class="clip-stat">
+        <span class="cs-lbl">Paghahatian ng Clips</span>
+        <span class="cs-val">Sa Pangkat</span>
+      </div>
+      <div class="clip-stat">
+        <span class="cs-lbl">Hawak sa Base para Manalo</span>
+        <span class="cs-val">3 segundo</span>
+      </div>
     </div>
 
     <div class="obj">
       <div class="obj-cell">
-        <p class="obj-lbl">🏁 Win by Base</p>
-        <p class="obj-txt">Touch or step on the enemy team's base without being tagged.</p>
+        <p class="obj-lbl">🏁 Manalo sa Base</p>
+        <p class="obj-txt">Hawakan ang base ng kalaban nang tatlong segundo nang hindi natatataya.</p>
       </div>
       <div class="obj-cell">
-        <p class="obj-lbl">🔒 Win by Capture</p>
-        <p class="obj-txt">Tag and imprison over half of the opposing team's players.</p>
+        <p class="obj-lbl">📎 Manalo sa Clips</p>
+        <p class="obj-txt">Tayain ang mga kalaban upang makuha ang kanilang clips. I-eliminate ang buong koponan sa pamamagitan ng pag-ubos ng lahat ng kanilang clips.</p>
       </div>
     </div>
 
@@ -579,88 +746,87 @@ footer {
         <text x="214" y="216" fill="#0057FF" font-size="28" font-family="monospace" text-anchor="middle" opacity=".07" font-weight="bold">TEAM A</text>
         <rect x="400" y="18" width="372" height="384" fill="rgba(255,69,0,.04)" rx="5"/>
         <text x="586" y="216" fill="#FF4500" font-size="28" font-family="monospace" text-anchor="middle" opacity=".07" font-weight="bold">TEAM B</text>
+        <!-- Centerline -->
         <line x1="400" y1="18" x2="400" y2="402" stroke="#FFD60A" stroke-width="2.2" stroke-dasharray="10,6"/>
         <text x="400" y="218" fill="#FFD60A" font-size="8" font-family="monospace" text-anchor="middle" opacity=".6">CENTERLINE</text>
+        <!-- Bases -->
         <circle cx="90" cy="210" r="42" fill="rgba(0,87,255,.15)" stroke="#5CA8FF" stroke-width="2.5"/>
-        <text x="90" y="206" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">BASE A</text>
+        <text x="90" y="204" fill="#5CA8FF" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">BASE A</text>
+        <text x="90" y="216" fill="#5CA8FF" font-size="7" font-family="monospace" text-anchor="middle">hold 3s to win</text>
         <circle cx="90" cy="210" r="9" fill="#5CA8FF" opacity=".55"/>
-        <rect x="46" y="310" width="82" height="68" rx="6" fill="rgba(0,87,255,.07)" stroke="#5CA8FF" stroke-width="1.4" stroke-dasharray="5,3"/>
-        <text x="87" y="340" fill="#5CA8FF" font-size="7" font-family="monospace" text-anchor="middle">JAIL A</text>
-        <text x="87" y="352" fill="#5CA8FF" font-size="7" font-family="monospace" text-anchor="middle">(prisoners)</text>
         <circle cx="710" cy="210" r="42" fill="rgba(255,69,0,.15)" stroke="#FF6B35" stroke-width="2.5"/>
-        <text x="710" y="206" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">BASE B</text>
+        <text x="710" y="204" fill="#FF6B35" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">BASE B</text>
+        <text x="710" y="216" fill="#FF6B35" font-size="7" font-family="monospace" text-anchor="middle">hold 3s to win</text>
         <circle cx="710" cy="210" r="9" fill="#FF6B35" opacity=".55"/>
-        <rect x="672" y="310" width="82" height="68" rx="6" fill="rgba(255,69,0,.07)" stroke="#FF6B35" stroke-width="1.4" stroke-dasharray="5,3"/>
-        <text x="713" y="340" fill="#FF6B35" font-size="7" font-family="monospace" text-anchor="middle">JAIL B</text>
-        <text x="713" y="352" fill="#FF6B35" font-size="7" font-family="monospace" text-anchor="middle">(prisoners)</text>
-        <circle cx="400" cy="80" r="30" fill="rgba(255,214,10,.1)" stroke="#FFD60A" stroke-width="1.8" stroke-dasharray="5,4"/>
-        <text x="400" y="76" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">SAFE SPOT</text>
-        <text x="400" y="87" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">max 5s</text>
-        <circle cx="400" cy="345" r="30" fill="rgba(255,214,10,.1)" stroke="#FFD60A" stroke-width="1.8" stroke-dasharray="5,4"/>
-        <text x="400" y="341" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">SAFE SPOT</text>
-        <text x="400" y="352" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">max 5s</text>
+        <!-- Sample players with clip indicators -->
         <circle cx="205" cy="155" r="9" fill="#5CA8FF" opacity=".75"/>
+        <text x="205" y="142" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">📎x2</text>
         <circle cx="178" cy="275" r="9" fill="#5CA8FF" opacity=".75"/>
+        <text x="178" y="262" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">📎x1</text>
         <circle cx="308" cy="210" r="9" fill="#5CA8FF" opacity=".5"/>
+        <text x="308" y="197" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">📎x3</text>
         <circle cx="592" cy="165" r="9" fill="#FF6B35" opacity=".75"/>
+        <text x="592" y="152" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">📎x2</text>
         <circle cx="622" cy="280" r="9" fill="#FF6B35" opacity=".75"/>
+        <text x="622" y="267" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">📎x1</text>
         <circle cx="490" cy="235" r="9" fill="#FF6B35" opacity=".5"/>
+        <text x="490" y="222" fill="#FFD60A" font-size="7" font-family="monospace" text-anchor="middle">📎x3</text>
+        <!-- Legend -->
         <circle cx="558" cy="377" r="7" fill="#5CA8FF" opacity=".7"/>
-        <text x="572" y="381" fill="#6B7280" font-size="8" font-family="monospace">Player</text>
-        <circle cx="558" cy="394" r="7" fill="none" stroke="#FFD60A" stroke-width="1.5"/>
-        <text x="572" y="398" fill="#6B7280" font-size="8" font-family="monospace">Safe Zone (5s max)</text>
-        <rect x="552" y="405" width="12" height="8" rx="2" fill="none" stroke="#6B7280" stroke-width="1" stroke-dasharray="3,2"/>
-        <text x="572" y="413" fill="#6B7280" font-size="8" font-family="monospace">Jail</text>
+        <text x="572" y="381" fill="#6B7280" font-size="8" font-family="monospace">Team A Player</text>
+        <circle cx="558" cy="394" r="7" fill="#FF6B35" opacity=".7"/>
+        <text x="572" y="398" fill="#6B7280" font-size="8" font-family="monospace">Team B Player</text>
+        <text x="558" y="413" fill="#FFD60A" font-size="8" font-family="monospace">📎</text>
+        <text x="572" y="413" fill="#6B7280" font-size="8" font-family="monospace">Clips (visible on shirt)</text>
       </svg>
       <div class="court-hint">Hover / tap to zoom</div>
     </div>
-	
+
     <!-- RULE DROPDOWNS -->
     <div class="acc-wrap">
       <details class="acc" open>
         <summary>Setup <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>4 teams total; <strong>2 teams compete per round.</strong></li>
-          <li>Each team has one base (cone / hoop / marked area) and a jail beside it.</li>
-          <li>A clear centerline divides the two territories.</li>
+          <li>Mahahati ang klase sa <strong>dalawang (2) pangkat</strong>, bawat isa ay may labing-isang (11) miyembro.</li>
+          <li>Bawat pangkat ay bibigyan ng <strong>dalawampung (20) clips</strong> bilang team pool. Depende na sa team kung paano hahatiin ang clips sa kanilang mga miyembro.</li>
+          <li><strong>Lahat ng clips ay dapat naka-clip sa harap ng damit</strong> at malinaw na nakikita ng kalaban sa lahat ng oras.</li>
+          <li>Bawat pangkat ay magkakaroon ng malinaw na <strong>base area</strong> sa kanilang dulo ng court, na may malinaw na centerline na naghahati sa dalawang teritoryo.</li>
         </ul>
       </details>
       <details class="acc">
-        <summary>Tagging Rules <span class="acc-arrow">+</span></summary>
+        <summary>Clips — Sistema ng Lakas <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Tagging = <strong>one-hand tap only.</strong></li>
-          <li>Two or more players may <strong>not</strong> simultaneously tag the same opponent.</li>
+          <li>Ang mga clips ay kumakatawan sa <em>lakas</em> ng bawat manlalaro.</li>
+          <li>Kapag <strong>nagkahawakan ang dalawang magkalaban</strong>, pareho silang titigil at ihahambing ang bilang ng kanilang clips.</li>
+          <li>Ang may <strong>mas maraming clips ay kukuha ng isang (1) clip</strong> mula sa may mas mababa.</li>
+          <li>Kapag <strong>pantay ang bilang ng clips</strong> ng dalawang manlalaro, ang naka-tag ang kukuha ng clip.</li>
+          <li>Sabay silang magbibilang ng <strong>"1–2–3"</strong> bago muling gumalaw. Mayroong <strong>tatlong segundong cooldown</strong> ang pagtataya para hindi dumugin.</li>
+          <li>Isang <strong>(1) clip lamang</strong> ang maaaring makuha sa bawat encounter.</li>
+          <li>Kapag <strong>naubos na ang clips</strong> ng isang manlalaro, siya ay tanggal na sa round na iyon.</li>
         </ul>
       </details>
       <details class="acc">
-        <summary>Prisoner System (Modified) <span class="acc-arrow">+</span></summary>
+        <summary>Hawak sa Base — Bagong Panuntunan <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Tagged inside enemy territory → you become a prisoner and go to jail.</li>
-          <li>One teammate can tap you free — but <strong>both must return</strong> to your own territory without being tagged.</li>
-          <li>If the rescuer is tagged mid-rescue → <strong>both become prisoners.</strong></li>
+          <li>Ang isang manlalaro na <strong>nakahawak o nakatayo sa sariling base</strong> ay immune — hindi siya maaaring mawalan ng clips, at awtomatikong matatalo ang sinumang mag-tag sa kanya.</li>
+          <li><strong>Isang tao lamang</strong> ang puwedeng humawak sa sariling base sa anumang oras.</li>
+          <li>Para manalo sa base: hawakan ang <strong>base ng kalaban nang tatlong (3) segundo</strong> nang hindi natatataya.</li>
         </ul>
       </details>
       <details class="acc">
-        <summary>Safe Zones — New Rule <span class="acc-arrow">+</span></summary>
+        <summary>Kondisyon ng Pagkapanalo <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Each team has one neutral safe spot at center court.</li>
-          <li>Maximum stay: <strong>5 seconds.</strong></li>
-          <li>No tagging allowed inside the safe zone.</li>
+          <li><strong>Manalo sa Base:</strong> Hawakan ang base ng kalaban nang tatlong (3) walang putol na segundo.</li>
+          <li><strong>Manalo sa Clips:</strong> Kunin ang lahat ng clips ng bawat miyembro ng kalabang koponan upang ma-eliminate ang buong pangkat.</li>
+          <li>Pagkatapos ng isang round, <strong>magpapalit ng puwesto</strong> ang magkalabang team sa court. Tatlong (3) opisyal na rounds ang laro.</li>
         </ul>
       </details>
       <details class="acc">
-        <summary>Base Guard Limit <span class="acc-arrow">+</span></summary>
+        <summary>Kaligtasan at Makatarungang Paglalaro <span class="acc-arrow">+</span></summary>
         <ul class="acc-body">
-          <li>Maximum <strong>2 players</strong> may guard their own base at once.</li>
-          <li>Exceeding this = warning. Second violation = <strong>free run for opponents.</strong></li>
-        </ul>
-      </details>
-      <details class="acc">
-        <summary>Safety &amp; Fair Play <span class="acc-arrow">+</span></summary>
-        <ul class="acc-body">
-          <li>No pushing, hair-pulling, or any violent contact.</li>
-          <li>Speed and strategy only — wits and agility win the game.</li>
-          <li>Players are safe when on or holding their own base.</li>
+          <li>Walang pagtutulak, paghahablot ng buhok, o anumang marahas na pakikipag-ugnayan.</li>
+          <li>Ang pagtataya ay nangangahulugang <strong>paghawak sa katawan ng kalaban</strong> upang simulan ang isang encounter — hindi pagsuntok.</li>
+          <li>Bilis, diskarte, at matalinong paghahatian ng clips ang magpapanalo sa laro.</li>
         </ul>
       </details>
     </div>
@@ -676,7 +842,6 @@ footer {
   <p class="sec-eye">Game Day · Schedule</p>
   <h2 class="sec-h">Timetable</h2>
 
-  <!-- Controls bar -->
   <div class="time-bar">
     <div class="time-bar-left">
       <label for="startTime">Start time</label>
@@ -684,12 +849,12 @@ footer {
     </div>
     <div class="tt-toggles">
       <div class="toggle-row">
-        <span class="toggle-lbl">Preliminaries</span>
+        <span class="toggle-lbl">Warm-Up</span>
         <label class="tog">
           <input type="checkbox" id="togPrelim" checked>
           <span class="tog-track"><span class="tog-thumb"></span></span>
         </label>
-        <input type="number" id="durPrelim" class="dur-input" value="5" min="1" max="60" title="Total prelim minutes">
+        <input type="number" id="durPrelim" class="dur-input" value="5" min="1" max="60" title="Warm-up minutes">
         <span class="dur-unit">min</span>
       </div>
       <div class="toggle-row">
@@ -698,7 +863,7 @@ footer {
           <input type="checkbox" id="togBuffer" checked>
           <span class="tog-track"><span class="tog-thumb"></span></span>
         </label>
-        <input type="number" id="durBuffer" class="dur-input" value="15" min="1" max="60" title="Buffer minutes">
+        <input type="number" id="durBuffer" class="dur-input" value="0" min="0" max="60" title="Buffer minutes">
         <span class="dur-unit">min</span>
       </div>
     </div>
@@ -728,258 +893,14 @@ footer {
 
     <div id="finderResults" class="finder-results hidden"></div>
 
-    <div class="teams-grid" id="teamsGrid">
-      <!-- Populated by JS -->
-    </div>
+    <div class="teams-grid" id="teamsGrid"></div>
   </div>
 </div>
 </section>
 
 <footer>
-  © 2026 · [PEPC 19.03] - Modified Game Portfolio · Floor is Lava &amp; Agawan Base · Made with <3
+  © 2026 · [PEPC 19.03] - Modified Game Portfolio · Floor is Lava &amp; Agawan Base · Made with ♥
 </footer>
-
-<style>
-/* ── TIMETABLE TOGGLES ── */
-.time-bar {
-  display: flex; flex-wrap: wrap; gap: 1.25rem;
-  align-items: flex-start;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 12px; padding: 1.25rem 1.75rem; margin-bottom: 2.5rem;
-}
-.time-bar-left { display: flex; flex-direction: column; gap: .4rem; }
-.time-bar-left label {
-  font-family: 'Space Mono'; font-size: .62rem;
-  text-transform: uppercase; letter-spacing: .14em; color: var(--muted);
-}
-.time-bar input[type=time] {
-  background: var(--dark); border: 1px solid var(--border2);
-  color: var(--yellow); border-radius: 7px;
-  padding: .5rem .9rem; font-family: 'Space Mono'; font-size: 1rem; width: 130px;
-}
-.time-bar input[type=time]:focus { outline: none; border-color: var(--yellow); }
-
-.tt-toggles { display: flex; flex-direction: column; gap: .7rem; justify-content: center; }
-.toggle-row {
-  display: flex; align-items: center; gap: .7rem;
-  background: rgba(255,255,255,.03);
-  border: 1px solid var(--border);
-  border-radius: 8px; padding: .55rem 1rem;
-}
-.toggle-lbl {
-  font-family: 'Space Mono'; font-size: .64rem;
-  text-transform: uppercase; letter-spacing: .1em; color: var(--muted);
-  min-width: 110px;
-}
-
-/* toggle switch */
-.tog { position: relative; display: inline-flex; cursor: pointer; }
-.tog input { position: absolute; opacity: 0; width: 0; height: 0; }
-.tog-track {
-  width: 40px; height: 22px; border-radius: 999px;
-  background: rgba(255,255,255,.1);
-  border: 1px solid var(--border2);
-  transition: background .25s;
-  position: relative;
-}
-.tog input:checked ~ .tog-track { background: var(--yellow); border-color: var(--yellow); }
-.tog-thumb {
-  position: absolute; top: 2px; left: 2px;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--muted); transition: transform .25s, background .25s;
-}
-.tog input:checked ~ .tog-track .tog-thumb { transform: translateX(18px); background: var(--dark); }
-
-.dur-input {
-  width: 52px; background: var(--dark);
-  border: 1px solid var(--border2); color: var(--text);
-  border-radius: 6px; padding: .3rem .5rem;
-  font-family: 'Space Mono'; font-size: .8rem; text-align: center;
-}
-.dur-input:focus { outline: none; border-color: var(--yellow); }
-.dur-unit { font-family: 'Space Mono'; font-size: .6rem; color: var(--muted); }
-
-/* disabled state */
-.toggle-row.disabled .toggle-lbl,
-.toggle-row.disabled .dur-unit { opacity: .35; }
-.toggle-row.disabled .dur-input { opacity: .35; pointer-events: none; }
-
-/* ── TEAM FINDER ── */
-.finder-wrap {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 20px; overflow: hidden;
-}
-.finder-search { padding: 2rem; border-bottom: 1px solid var(--border); }
-.search-box {
-  display: flex; align-items: center; gap: .75rem;
-  background: var(--dark); border: 1px solid var(--border2);
-  border-radius: 10px; padding: .75rem 1rem;
-  transition: border-color .2s;
-}
-.search-box:focus-within { border-color: var(--yellow); }
-.search-icon { font-size: 1rem; flex-shrink: 0; }
-.search-box input {
-  flex: 1; background: none; border: none; outline: none;
-  color: var(--text); font-family: 'DM Sans'; font-size: 1.05rem;
-  font-weight: 500;
-}
-.search-box input::placeholder { color: var(--muted); font-weight: 400; }
-.clear-btn {
-  background: none; border: none; color: var(--muted);
-  cursor: pointer; font-size: .9rem; padding: .2rem .4rem;
-  border-radius: 4px; transition: color .2s, background .2s;
-  display: none;
-}
-.clear-btn.show { display: block; }
-.clear-btn:hover { color: var(--text); background: rgba(255,255,255,.08); }
-.search-hint { font-family: 'Space Mono'; font-size: .6rem; color: var(--muted); margin-top: .6rem; text-transform: uppercase; letter-spacing: .1em; }
-
-/* result card */
-.finder-results { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); }
-.finder-results.hidden { display: none; }
-.result-name {
-  font-family: 'Bebas Neue'; font-size: 1.6rem; letter-spacing: .05em;
-  margin-bottom: 1rem; color: var(--yellow);
-}
-.result-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-@media (max-width: 520px) { .result-cards { grid-template-columns: 1fr; } }
-.result-card {
-  border-radius: 12px; padding: 1.25rem;
-  border: 1px solid var(--border2);
-}
-.result-card.lava { background: rgba(255,69,0,.08); border-color: rgba(255,69,0,.3); }
-.result-card.base { background: rgba(0,87,255,.08); border-color: rgba(0,87,255,.3); }
-.result-game {
-  font-family: 'Space Mono'; font-size: .58rem;
-  text-transform: uppercase; letter-spacing: .15em;
-  color: var(--muted); margin-bottom: .3rem;
-}
-.result-team-name {
-  font-family: 'Bebas Neue'; font-size: 1.4rem; letter-spacing: .05em;
-  margin-bottom: .75rem;
-}
-.result-card.lava .result-team-name { color: var(--lava-b); }
-.result-card.base .result-team-name { color: var(--blue-l); }
-.result-mates { display: flex; flex-wrap: wrap; gap: .4rem; }
-.mate-tag {
-  padding: .25rem .65rem; border-radius: 999px;
-  font-size: .8rem; font-weight: 500;
-  background: rgba(255,255,255,.06);
-  border: 1px solid var(--border2);
-}
-.mate-tag.me {
-  background: var(--yellow); color: var(--dark);
-  border-color: var(--yellow); font-weight: 700;
-}
-.not-found {
-  font-size: .95rem; color: var(--muted);
-  font-style: italic; padding: .5rem 0;
-}
-
-/* all teams grid */
-.teams-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1px; background: var(--border);
-}
-.team-block { background: var(--card); padding: 1.5rem; }
-.team-block:hover { background: rgba(255,255,255,.03); }
-.team-game-label {
-  font-family: 'Space Mono'; font-size: .55rem;
-  text-transform: uppercase; letter-spacing: .15em;
-  color: var(--muted); margin-bottom: .35rem;
-}
-.team-block h4 {
-  font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: .05em;
-  margin-bottom: .65rem;
-}
-.team-block.lava h4 { color: var(--lava-b); }
-.team-block.base h4 { color: var(--blue-l); }
-.member-list { display: flex; flex-direction: column; gap: .3rem; }
-.member { font-size: .83rem; color: var(--muted); }
-.member::before { content: '— '; color: var(--border2); }
-
-/* ── LIVE SCORE PANEL ── */
-.live-panel {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr;
-  gap: 1rem;
-  padding: 1.5rem;
-  border-top: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
-}
-
-.timer-box, .score-box {
-  background: var(--dark);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1rem;
-  text-align: center;
-}
-
-.lbl {
-  font-family: 'Space Mono';
-  font-size: .6rem;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--muted);
-  margin-bottom: .4rem;
-}
-
-.timer {
-  font-family: 'Bebas Neue';
-  font-size: 3rem;
-  letter-spacing: .08em;
-  margin-bottom: .5rem;
-  color: var(--yellow);
-}
-
-.timer-controls {
-  display: flex;
-  justify-content: center;
-  gap: .4rem;
-}
-
-.timer-controls button,
-.score-box button {
-  background: none;
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: 'Space Mono';
-  font-size: .6rem;
-  padding: .35rem .6rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background .2s, transform .2s;
-}
-
-.timer-controls button:hover,
-.score-box button:hover {
-  background: rgba(255,255,255,.08);
-  transform: translateY(-1px);
-}
-
-.score {
-  font-family: 'Bebas Neue';
-  font-size: 2.6rem;
-  margin: .4rem 0;
-}
-
-.score-box.players .score { color: var(--blue-l); }
-.score-box.catchers .score { color: var(--lava-b); }
-
-.score-actions {
-  display: flex;
-  justify-content: center;
-  gap: .4rem;
-}
-
-@media (max-width: 700px) {
-  .live-panel {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
 
 <script>
 /* CURSOR */
@@ -1023,10 +944,10 @@ document.querySelectorAll('a, button, input, summary, .btn, .tog, .search-box').
 
 /* ══ TIMETABLE ══════════════════════════════════════════════ */
 const GROUPS = [
-  { id: 'prelim', label: 'Preliminaries', color: '#6B7280', toggleable: true,
-    items: [{ dur: 2, act: 'Prayer' }, { dur: 3, act: 'Warm-up' }] },
+  { id: 'prelim', label: 'Warm-Up', color: '#6B7280', toggleable: true,
+    items: [{ dur: 5, act: '🏃 Dynamic Stretching & Light Movement Drills' }] },
   { id: 'buffer', label: 'Buffer Time', color: '#FFD60A', buf: true, toggleable: true,
-    items: [{ dur: 15, act: '⏳ Buffer Time' }] },
+    items: [{ dur: 0, act: '⏳ Buffer Time' }] },
   { label: 'The Floor is Lava — 4 min per round', color: '#FF6B35',
     items: [
       { dur: 2, act: 'Explanation of Game' },
@@ -1037,17 +958,20 @@ const GROUPS = [
       { dur: 4, act: 'Round 4' },
       { dur: 4, act: 'Round 5' },
       { dur: 4, act: 'Round 6' },
+      { dur: 1, act: '🧘 Quick Cool Down / Transition' },
     ]},
-  { label: 'Agawan Base — Laro ng Lahi · 8 min per round', color: '#5CA8FF',
+  { label: 'Agawan Base — Clips System · 8 min per round', color: '#5CA8FF',
     items: [
-      { dur: 2, act: 'Explanation of Game' },
+      { dur: 3, act: 'Explanation of Game' },
       { dur: 3, act: 'Trial Round' },
-      { dur: 8, act: 'Team A vs Team B' },
-      { dur: 8, act: 'Team C vs Team D' },
-      { dur: 8, act: 'Match 1 winner vs Match 2 winner' },
+      { dur: 8, act: 'Round 1' },
+      { dur: 1, act: 'Change Court Positions' },
+      { dur: 8, act: 'Round 2' },
+      { dur: 1, act: 'Change Court Positions' },
+      { dur: 8, act: 'Round 3' },
     ]},
   { label: 'Post-Game', color: '#6B7280',
-    items: [{ dur: 2, act: '🧘 Cool Down' }] },
+    items: [{ dur: 3, act: '🧘 Cool Down' }] },
 ];
 
 function toMins(s) { const [h, m] = s.split(':').map(Number); return h * 60 + m; }
@@ -1062,30 +986,20 @@ function renderTT() {
   const showPrelim = document.getElementById('togPrelim').checked;
   const showBuffer = document.getElementById('togBuffer').checked;
   const prelimDur  = parseInt(document.getElementById('durPrelim').value) || 5;
-  const bufferDur  = parseInt(document.getElementById('durBuffer').value) || 15;
+  const bufferDur  = parseInt(document.getElementById('durBuffer').value) || 0;
   const c = document.getElementById('ttContainer');
   c.innerHTML = '';
 
-  // Update disabled state visually
   document.querySelector('.toggle-row:nth-child(1)').classList.toggle('disabled', !showPrelim);
   document.querySelector('.toggle-row:nth-child(2)').classList.toggle('disabled', !showBuffer);
 
   GROUPS.forEach(grp => {
-    // skip toggled-off groups
     if (grp.id === 'prelim' && !showPrelim) return;
     if (grp.id === 'buffer' && !showBuffer) return;
 
-    // For toggleable groups, use the custom duration input as total time
     let items = grp.items;
-    if (grp.id === 'prelim') {
-      // redistribute: prayer gets 2min or proportional, warm-up gets rest
-      const prayerDur = Math.min(2, prelimDur);
-      const warmupDur = Math.max(1, prelimDur - prayerDur);
-      items = [{ dur: prayerDur, act: 'Prayer' }, { dur: warmupDur, act: 'Warm-up' }];
-    }
-    if (grp.id === 'buffer') {
-      items = [{ dur: bufferDur, act: '⏳ Buffer Time' }];
-    }
+    if (grp.id === 'prelim') items = [{ dur: prelimDur, act: '🏃 Dynamic Stretching & Light Movement Drills' }];
+    if (grp.id === 'buffer') { if (bufferDur <= 0) return; items = [{ dur: bufferDur, act: '⏳ Buffer Time' }]; }
 
     let rows = '';
     items.forEach(item => {
@@ -1121,58 +1035,88 @@ document.getElementById('durPrelim').addEventListener('input', renderTT);
 document.getElementById('durBuffer').addEventListener('input', renderTT);
 renderTT();
 
-/* ══ TEAM FINDER ════════════════════════════════════════════ */
-// ─────────────────────────────────────────────────────────────
-// TEAM DATA
+/* ══ TEAM DATA ══════════════════════════════════════════════ */
 const LAVA_TEAMS = {
-  'CATCHERS': ['DELA CRUZ', 'SANTOS', 'REYES', 'GARCIA', 'TORRES', 'LUATON', 'TEST', 'TEST2'],
-  'PLAYERS': ['FLORES', 'MENDOZA', 'CASTRO', 'BAUTISTA', 'VILLANUEVA'],
+  'CATCHERS': [
+    'DIEGO', 'EDILLOR', 'IMPERIAL', 'LAGUDA', 'PAZ', 'SANTOS'
+  ],
+  'PLAYERS': [
+    'ABADA', 'ARMADA', 'BALA', 'BATTUNG', 'BORJA', 'BUYCO',
+    'CARPIO', 'CASTRO', 'CONCEPCION', 'GARCIA', 'MADRIDEJOS',
+    'MENDIOLA', 'NATORES', 'PANLAQUI', 'POLINTAN', 'TINIO'
+  ],
 };
 
 const AGAWAN_TEAMS = {
-  'Team A': ['DELA CRUZ', 'FLORES', 'RAMOS', 'MARTINEZ', 'SANTOS', 'MENDOZA'],
-  'Team B': ['REYES', 'CASTRO', 'GARCIA', 'BAUTISTA', 'AQUINO', 'RAMIREZ'],
+  'Team A': [
+    'BALA', 'BATTUNG', 'BORJA', 'BUYCO', 'CASTRO',
+    'CONCEPCION', 'NATORES', 'PANLAQUI', 'POLINTAN', 'TINIO'
+  ],
+  'Team B': [
+    'ABADA', 'ARMADA', 'CARPIO', 'DIEGO', 'EDILLOR',
+    'GARCIA', 'IMPERIAL', 'LAGUDA', 'MADRIDEJOS', 'MENDIOLA',
+    'PAZ', 'SANTOS'
+  ],
 };
-// ─────────────────────────────────────────────────────────────
 
-// Build the all-teams grid
+/* Full names for display */
+const FULL_NAMES = {
+  'ABADA': 'SOPHIA ALEXANDRIA ABADA',
+  'ARMADA': 'DOMINIC CLARK ARMADA',
+  'BALA': 'ISABELLA KRISTINA BALA',
+  'BATTUNG': 'LIANA MARIE BATTUNG',
+  'BORJA': 'MARC DUSTIN BORJA',
+  'BUYCO': 'SANDY GABRIELLE BUYCO',
+  'CARPIO': 'DOMINIC CRAIG CARPIO',
+  'CASTRO': 'MARIA ALEXANDRA CASTRO',
+  'CONCEPCION': 'CASSANDRA GIANE CONCEPCION',
+  'DIEGO': 'LOUISE ARABELLE DIEGO',
+  'EDILLOR': 'SIMON IÑIGO EDILLOR',
+  'GARCIA': 'MA. SHAIMA CASSANDRA GARCIA',
+  'IMPERIAL': 'SAMANTA KYLE IMPERIAL',
+  'LAGUDA': 'REGINA CLARE LAGUDA',
+  'MADRIDEJOS': 'MARGARITA ALEXI MADRIDEJOS',
+  'MENDIOLA': 'JOHN LUI MENDIOLA',
+  'NATORES': 'MICHAEL SETH NATORES',
+  'PANLAQUI': 'JOHN WINSTON PANLAQUI',
+  'PAZ': 'JULIEN ANDREA PAZ',
+  'POLINTAN': 'AMARIS POLINTAN',
+  'SANTOS': 'AILIYAH JADE SANTOS',
+  'TINIO': 'SANTINO GABRIEL TINIO',
+};
+
+function getDisplayName(last) { return FULL_NAMES[last] || last; }
+
+/* Build the all-teams grid */
 function buildTeamsGrid() {
   const grid = document.getElementById('teamsGrid');
   grid.innerHTML = '';
 
-  // Lava teams
   Object.entries(LAVA_TEAMS).forEach(([team, members]) => {
     const div = document.createElement('div');
     div.className = 'team-block lava';
-    div.dataset.span = team === 'PLAYERS' ? 3 : 1; // Catchers = 1, Players = 3
-
     div.innerHTML = `
       <p class="team-game-label">🔥 Floor Is Lava</p>
       <h4>${team}</h4>
-      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>
+      <div class="member-list">${members.map(m => `<span class="member">${getDisplayName(m)}</span>`).join('')}</div>
     `;
     grid.appendChild(div);
   });
 
-  // Agawan Base — 2 teams, each spans 2 columns
   Object.entries(AGAWAN_TEAMS).forEach(([team, members]) => {
     const div = document.createElement('div');
     div.className = 'team-block base';
-    div.dataset.span = 2;
-
     div.innerHTML = `
       <p class="team-game-label">🏁 Agawan Base</p>
       <h4>${team}</h4>
-      <div class="member-list">${members.map(m => `<span class="member">${m}</span>`).join('')}</div>
+      <div class="member-list">${members.map(m => `<span class="member">${getDisplayName(m)}</span>`).join('')}</div>
     `;
     grid.appendChild(div);
   });
 }
-
-// INITIALIZE
 buildTeamsGrid();
-	
-// Search logic
+
+/* Search logic */
 function findTeams(query) {
   query = query.trim().toUpperCase();
   if (!query) return null;
@@ -1181,12 +1125,12 @@ function findTeams(query) {
   let agawanTeam = null, agawanMembers = [];
 
   for (const [team, members] of Object.entries(LAVA_TEAMS)) {
-    if (members.some(m => m.includes(query))) {
+    if (members.some(m => m.includes(query) || getDisplayName(m).toUpperCase().includes(query))) {
       lavaTeam = team; lavaMembers = members; break;
     }
   }
   for (const [team, members] of Object.entries(AGAWAN_TEAMS)) {
-    if (members.some(m => m.includes(query))) {
+    if (members.some(m => m.includes(query) || getDisplayName(m).toUpperCase().includes(query))) {
       agawanTeam = team; agawanMembers = members; break;
     }
   }
@@ -1198,29 +1142,25 @@ function renderResults(query) {
   const res = document.getElementById('finderResults');
   const clear = document.getElementById('clearSearch');
 
-  if (!query.trim()) {
-    res.classList.add('hidden');
-    clear.classList.remove('show');
-    return;
-  }
-
+  if (!query.trim()) { res.classList.add('hidden'); clear.classList.remove('show'); return; }
   clear.classList.add('show');
-  const found = findTeams(query);
 
+  const found = findTeams(query);
   if (!found || (!found.lavaTeam && !found.agawanTeam)) {
     res.classList.remove('hidden');
-    res.innerHTML = `<p class="not-found">No one found for "<strong>${query}</strong>" — check spelling or try a partial name.</p>`;
+    res.innerHTML = `<p class="not-found">No one found for "<strong>${query}</strong>" — check spelling or try a partial last name.</p>`;
     return;
   }
 
   const q = query.trim().toUpperCase();
+  const isMatch = m => m.includes(q) || getDisplayName(m).toUpperCase().includes(q);
 
   const lavaCard = found.lavaTeam ? `
     <div class="result-card lava">
       <p class="result-game">🔥 Floor is Lava</p>
       <p class="result-team-name">${found.lavaTeam}</p>
       <div class="result-mates">
-        ${found.lavaMembers.map(m => `<span class="mate-tag${m.includes(q) ? ' me' : ''}">${m}</span>`).join('')}
+        ${found.lavaMembers.map(m => `<span class="mate-tag${isMatch(m) ? ' me' : ''}">${getDisplayName(m)}</span>`).join('')}
       </div>
     </div>` : `<div class="result-card lava"><p class="result-game">🔥 Floor is Lava</p><p class="not-found">Not assigned yet</p></div>`;
 
@@ -1229,22 +1169,18 @@ function renderResults(query) {
       <p class="result-game">🏁 Agawan Base</p>
       <p class="result-team-name">${found.agawanTeam}</p>
       <div class="result-mates">
-        ${found.agawanMembers.map(m => `<span class="mate-tag${m.includes(q) ? ' me' : ''}">${m}</span>`).join('')}
+        ${found.agawanMembers.map(m => `<span class="mate-tag${isMatch(m) ? ' me' : ''}">${getDisplayName(m)}</span>`).join('')}
       </div>
     </div>` : `<div class="result-card base"><p class="result-game">🏁 Agawan Base</p><p class="not-found">Not assigned yet</p></div>`;
 
   res.classList.remove('hidden');
-  res.innerHTML = `
-    <p class="result-name">Results for "${query.trim()}"</p>
-    <div class="result-cards">${lavaCard}${agawanCard}</div>`;
+  res.innerHTML = `<p class="result-name">Results for "${query.trim()}"</p><div class="result-cards">${lavaCard}${agawanCard}</div>`;
 }
 
 const searchInput = document.getElementById('nameSearch');
 searchInput.addEventListener('input', e => renderResults(e.target.value));
 document.getElementById('clearSearch').addEventListener('click', () => {
-  searchInput.value = '';
-  renderResults('');
-  searchInput.focus();
+  searchInput.value = ''; renderResults(''); searchInput.focus();
 });
 
 /* SCROLL REVEAL */
@@ -1252,17 +1188,13 @@ if ('IntersectionObserver' in window) {
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
   }, { threshold: 0.07 });
-  document.querySelectorAll('.fu').forEach(el => {
-    el.classList.add('animate');
-    obs.observe(el);
-  });
+  document.querySelectorAll('.fu').forEach(el => { el.classList.add('animate'); obs.observe(el); });
 }
-/* ══ LIVE TIMER & SCORE ════════════════════════════════════ */
 
-let timeLeft = 240; // 4 minutes
+/* ══ LIVE TIMER & SCORE ════════════════════════════════════ */
+let timeLeft = 240;
 let timerInterval = null;
 let running = false;
-
 let pScore = 0;
 let cScore = 0;
 
@@ -1274,53 +1206,21 @@ function updateTimer() {
   const m = Math.floor(timeLeft / 60);
   const s = timeLeft % 60;
   timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-
-  if (timeLeft <= 10) {
-    timerEl.style.color = 'var(--lava)';
-  } else {
-    timerEl.style.color = 'var(--yellow)';
-  }
+  timerEl.style.color = timeLeft <= 10 ? 'var(--lava)' : 'var(--yellow)';
 }
 
 function startTimer() {
   if (running) return;
   running = true;
   timerInterval = setInterval(() => {
-    if (timeLeft <= 0) {
-      pauseTimer();
-      timerEl.textContent = '00:00';
-      return;
-    }
-    timeLeft--;
-    updateTimer();
+    if (timeLeft <= 0) { pauseTimer(); timerEl.textContent = '00:00'; return; }
+    timeLeft--; updateTimer();
   }, 1000);
 }
-
-function pauseTimer() {
-  running = false;
-  clearInterval(timerInterval);
-}
-
-function resetTimer() {
-  pauseTimer();
-  timeLeft = 240;
-  updateTimer();
-}
-
-function addPlayer() {
-  pScore++;
-  pEl.textContent = pScore;
-}
-
-function addCatcher() {
-  cScore++;
-  cEl.textContent = cScore;
-}
-
-function bonusCatcher() {
-  cScore += 2;
-  cEl.textContent = cScore;
-}
+function pauseTimer() { running = false; clearInterval(timerInterval); }
+function resetTimer() { pauseTimer(); timeLeft = 240; updateTimer(); }
+function addPlayer() { pScore++; pEl.textContent = pScore; }
+function addCatcher() { cScore++; cEl.textContent = cScore; }
 
 updateTimer();
 </script>
