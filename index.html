@@ -862,8 +862,8 @@ footer {
         <div class="winner-trophy">🏆</div>
         <div class="winner-text">
           <p class="winner-eyebrow">Game Winners · Agawan Base</p>
-          <p class="winner-name">Team B Wins!</p>
-          <p class="winner-sub">Team B dominated the clips battle and successfully captured the opponent's base. <strong>Congratulations to Team B!</strong></p>
+          <p class="winner-name">Team A Wins!</p>
+          <p class="winner-sub">Team A dominated the clips battle and successfully captured the opponent's base. <strong>Congratulations to Team A!</strong></p>
         </div>
       </div>
     </div>
@@ -1134,21 +1134,21 @@ footer {
     <p class="photo-upload-hint">📸 Replace the placeholder images below with your own photos by editing the src="" attribute of each &lt;img&gt; tag</p>
 
     <div class="photo-grid">
-      <div class="photo-slot" onclick="openLightbox(this)">
-        <div class="photo-placeholder"><span class="ph-icon">📷</span><span class="ph-lbl">Add Photo Here</span></div>
+        <div class="photo-slot" onclick="openLightbox(this)">
+        <img src="agawan-base/IMG_7277.png" alt="">
         <div class="photo-caption">Clips distributed to both teams before Round 1</div>
       </div>
       <div class="photo-slot" onclick="openLightbox(this)">
-        <div class="photo-placeholder"><span class="ph-icon">📷</span><span class="ph-lbl">Add Photo Here</span></div>
-        <div class="photo-caption">Players counting clips during a tag encounter</div>
+        <img src="agawan-base/IMG_0001.jpg" alt="">
+        <div class="photo-caption">Clips distributed to both teams before Round 1</div>
       </div>
       <div class="photo-slot" onclick="openLightbox(this)">
-        <div class="photo-placeholder"><span class="ph-icon">📷</span><span class="ph-lbl">Add Photo Here</span></div>
-        <div class="photo-caption">Team B player reaching the opponent's base</div>
+        <img src="agawan-base/IMG_0001.jpg" alt="">
+        <div class="photo-caption">Clips distributed to both teams before Round 1</div>
       </div>
       <div class="photo-slot" onclick="openLightbox(this)">
-        <div class="photo-placeholder"><span class="ph-icon">📷</span><span class="ph-lbl">Add Photo Here</span></div>
-        <div class="photo-caption">Team B celebrates their victory</div>
+        <img src="agawan-base/IMG_0001.jpg" alt="">
+        <div class="photo-caption">Clips distributed to both teams before Round 1</div>
       </div>
     </div>
 
@@ -1175,8 +1175,8 @@ footer {
       <div class="flow-item">
         <div class="flow-dot"></div>
         <p class="flow-time">Result</p>
-        <p class="flow-title">🏆 Team B Wins</p>
-        <p class="flow-desc">Team B secured victory by successfully holding Team A's base for 3 uncontested seconds in the decisive round. Their coordinated clip management and disciplined base defense proved to be the winning edge.</p>
+        <p class="flow-title">🏆 Team A Wins</p>
+        <p class="flow-desc">Team A secured victory by successfully holding Team B's base for 3 uncontested seconds in the decisive round. Their coordinated clip management and disciplined base defense proved to be the winning edge.</p>
       </div>
     </div>
 
@@ -1486,7 +1486,7 @@ function getDisplayName(last) { return FULL_NAMES[last] || last; }
 
 /* ── WINNERS ── Players won Lava · Team B won Agawan */
 const LAVA_WINNER = 'PLAYERS';
-const AGAWAN_WINNER = 'Team B';
+const AGAWAN_WINNER = 'Team A';
 
 function buildTeamsGrid() {
   const grid = document.getElementById('teamsGrid');
@@ -1580,6 +1580,17 @@ function resetTimer() { pauseTimer(); timeLeft=240; updateTimer(); }
 function addPlayer() { pScore++; pEl.textContent=pScore; }
 function addCatcher() { cScore++; cEl.textContent=cScore; }
 updateTimer();
+
+/* FILE DIRECTORY */
+
+const agawanPath = "agawan-base/";
+const lavaPath = "the-floor-is-lava/";
+  
+document.querySelectorAll("img[data-file]").forEach(img => {
+  const folder = img.dataset.folder === "agawan" ? agawanPath : lavaPath;
+  img.src = folder + img.dataset.file;
+});
+  
 </script>
 </body>
 </html>
