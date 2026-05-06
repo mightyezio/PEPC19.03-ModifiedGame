@@ -438,6 +438,27 @@ tbody tr:hover td { background: rgba(255,255,255,.02); }
 .doc-panel.active { display: block; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 
+/* ── Photo caption hint banner ── */
+.caption-hint-bar {
+  display: flex; align-items: center; gap: .6rem;
+  font-family: 'Space Mono'; font-size: .6rem;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--yellow); opacity: .8;
+  padding: .7rem 1rem; margin-bottom: 1rem;
+  background: rgba(255,214,10,.05);
+  border: 1px dashed rgba(255,214,10,.3);
+  border-radius: 8px;
+}
+.caption-hint-bar .hint-pulse {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--yellow); flex-shrink: 0;
+  animation: hintPulse 1.8s ease-in-out infinite;
+}
+@keyframes hintPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .3; transform: scale(.6); }
+}
+
 /* Photo grid */
 .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; margin-bottom: 2.5rem; }
 .photo-slot {
@@ -456,13 +477,23 @@ tbody tr:hover td { background: rgba(255,255,255,.02); }
 }
 .photo-slot .photo-placeholder .ph-icon { font-size: 2rem; opacity: .4; }
 .photo-slot .photo-placeholder .ph-lbl { font-family: 'Space Mono'; font-size: .58rem; text-transform: uppercase; letter-spacing: .12em; opacity: .4; }
+
+/* Caption — hidden on desktop, revealed on hover; always visible on touch */
 .photo-caption {
   position: absolute; bottom: 0; left: 0; right: 0;
   background: linear-gradient(transparent, rgba(0,0,0,.85));
-  padding: 1.5rem .9rem .7rem; font-size: .78rem; color: rgba(255,255,255,.8);
+  padding: 1.5rem .9rem .7rem; font-size: .78rem; color: rgba(255,255,255,.9);
   opacity: 0; transition: opacity .25s;
 }
 .photo-slot:hover .photo-caption { opacity: 1; }
+
+/* On touch devices: captions always visible, no zoom on image */
+@media (hover: none) {
+  .photo-caption { opacity: 1; }
+  .photo-slot img { transform: none !important; }
+  .photo-slot:hover { transform: none; box-shadow: none; }
+}
+
 .photo-upload-hint {
   font-family: 'Space Mono'; font-size: .6rem; text-transform: uppercase;
   letter-spacing: .12em; color: var(--muted); margin-bottom: 1.75rem;
@@ -1051,6 +1082,13 @@ footer {
 
   <!-- LAVA DOC -->
   <div class="doc-panel active" id="lava-doc">
+
+    <!-- CAPTION HINT -->
+    <div class="caption-hint-bar" id="captionHintBar">
+      <span class="hint-pulse"></span>
+      <span id="captionHintText">Hover over each photo to reveal its caption</span>
+    </div>
+
     <div class="photo-grid">
       <div class="photo-slot" onclick="openLightbox(this)">
         <img src="IMG_7245.png" alt="">
@@ -1062,7 +1100,7 @@ footer {
       </div>
       <div class="photo-slot" onclick="openLightbox(this)">
         <img src="IMG_7277.png" alt="">
-        <div class="photo-caption">Players and Catchers try to outwit one anonther by doing tricks like this.</div>
+        <div class="photo-caption">Players and Catchers try to outwit one another by doing tricks like this.</div>
       </div>
     </div>
 
@@ -1126,6 +1164,12 @@ footer {
 <!-- AGAWAN DOC -->
 <div class="doc-panel" id="agawan-doc">
 
+  <!-- CAPTION HINT -->
+  <div class="caption-hint-bar" id="captionHintBar2">
+    <span class="hint-pulse"></span>
+    <span class="captionHintText">Hover over each photo to reveal its caption</span>
+  </div>
+
   <div class="photo-grid">
     <div class="photo-slot" onclick="openLightbox(this)">
       <img src="IMG_7307.png" alt="">
@@ -1148,7 +1192,7 @@ footer {
       <div class="flow-dot"></div>
       <p class="flow-time">Bahagi 1 · Paghahanda</p>
       <p class="flow-title">Pamamahagi ng Clip, Pag-assign ng Base</p>
-      <p class="flow-desc">Bawat koponan ay nakatanggap ng kanilang mga clip at nagkaroon ng maikling oras upang magplano ng kanilang estratehiya. May mga manlalaro na piniling magdala ng mas maraming clip bilang “tank,” upang tumanggap ng laban sa teritoryo ng kalaban, habang ang iba ay mas magaan ang dala upang mabilis makalapit sa base.</p>
+      <p class="flow-desc">Bawat koponan ay nakatanggap ng kanilang mga clip at nagkaroon ng maikling oras upang magplano ng kanilang estratehiya. May mga manlalaro na piniling magdala ng mas maraming clip bilang "tank," upang tumanggap ng laban sa teritoryo ng kalaban, habang ang iba ay mas magaan ang dala upang mabilis makalapit sa base.</p>
     </div>
 
     <div class="flow-item">
@@ -1308,6 +1352,14 @@ document.addEventListener('mousemove', e => {
 function curBig() { cur.classList.add('big'); }
 function curSmall() { cur.classList.remove('big'); }
 
+/* ── CAPTION HINT: swap text on touch devices, always-show captions ── */
+const isTouch = window.matchMedia('(hover: none)').matches;
+if (isTouch) {
+  document.querySelectorAll('#captionHintText, .captionHintText').forEach(el => {
+    el.textContent = 'Captions are shown on every photo below';
+  });
+}
+
 /* ── CONFETTI ── */
 function spawnConfetti(containerId) {
   const wrap = document.getElementById(containerId);
@@ -1376,7 +1428,7 @@ function switchReflect(name, tab) {
 /* ── LIGHTBOX ── */
 function openLightbox(slot) {
   const img = slot.querySelector('img');
-  if (!img) return; // placeholder slots don't open
+  if (!img) return;
   document.getElementById('lightboxImg').src = img.src;
   document.getElementById('lightbox').classList.add('open');
 }
@@ -1482,7 +1534,7 @@ const FULL_NAMES = {
 };
 function getDisplayName(last) { return FULL_NAMES[last] || last; }
 
-/* ── WINNERS ── Players won Lava · Team B won Agawan */
+/* ── WINNERS ── */
 const LAVA_WINNER = 'PLAYERS';
 const AGAWAN_WINNER = 'Team A';
 
@@ -1580,15 +1632,12 @@ function addCatcher() { cScore++; cEl.textContent=cScore; }
 updateTimer();
 
 /* FILE DIRECTORY */
-
 const agawanPath = "agawan-base/";
 const lavaPath = "the-floor-is-lava/";
-  
 document.querySelectorAll("img[data-file]").forEach(img => {
   const folder = img.dataset.folder === "agawan" ? agawanPath : lavaPath;
   img.src = folder + img.dataset.file;
 });
-  
 </script>
 </body>
 </html>
